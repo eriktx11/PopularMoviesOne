@@ -1,15 +1,15 @@
 [
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/notification_template_part_chronometer.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_template_part_chronometer.xml"
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_expanded_menu_layout.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_select_dialog_material.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_select_dialog_material.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_expanded_menu_layout.xml"
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/notification_template_part_chronometer.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_template_part_chronometer.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_layout_tab_text.xml",
@@ -24,12 +24,12 @@
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/support_simple_spinner_dropdown_item.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_layout_snackbar.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_layout_snackbar.xml"
-    },
-    {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_screen_simple_overlay_action_mode.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_layout_snackbar.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_layout_snackbar.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_bottom_sheet_dialog.xml",
@@ -52,20 +52,20 @@
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_navigation_item_subheader.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_alert_dialog_material.xml"
-    },
-    {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/fragment_main.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/src/main/res/layout/fragment_main.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_list_menu_item_icon.xml"
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_alert_dialog_material.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_screen_simple.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_screen_simple.xml"
+    },
+    {
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_list_menu_item_icon.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
@@ -120,24 +120,24 @@
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_template_big_media.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_action_bar_title_item.xml"
-    },
-    {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_screen_content_include.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_screen_content_include.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_popup_menu_item_layout.xml"
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_navigation_menu_item.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_navigation_menu_item.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/notification_media_cancel_action.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_media_cancel_action.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_navigation_menu_item.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_navigation_menu_item.xml"
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_popup_menu_item_layout.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
@@ -160,12 +160,12 @@
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/abc_action_bar_view_list_nav_layout.xml"
     },
     {
-        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
-        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_template_big_media_narrow.xml"
-    },
-    {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_navigation_item_separator.xml",
         "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/res/layout/design_navigation_item_separator.xml"
+    },
+    {
+        "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
+        "source": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/layout/notification_template_big_media_narrow.xml"
     },
     {
         "merged": "/Users/erikllerena/Documents/eAS/PopularMoviesOne/app/build/intermediates/res/merged/debug/layout/design_layout_tab_icon.xml",
