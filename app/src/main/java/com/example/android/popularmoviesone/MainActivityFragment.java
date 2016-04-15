@@ -1,7 +1,12 @@
 package com.example.android.popularmoviesone;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,15 +28,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
 
+
+    private ArrayAdapter<String> mMovietAdapter;
 
     public MainActivityFragment() {
     }
@@ -43,39 +53,35 @@ public class MainActivityFragment extends Fragment {
         loadMovies.execute();
     }
 
-    private ArrayAdapter<String> mMovietAdapter;
-
     @Override
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mMovietAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.movie_item,
-                R.id.imageViewMovie,
+                R.id.posterImg,
                 new ArrayList<String>()
         );
 
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
+        GridView gridView = (GridView) rootView.findViewById(R.id.movieGrid);
         gridView.setAdapter(mMovietAdapter);
+        gridView.setColumnWidth(100);
+        gridView.setVisibility(GridView.GONE);
+
+
         return rootView;
-
-
     }
 
 
     public class FetchMovieList extends AsyncTask<String, Void, String[]> {
-
         private final String LOG_TAG = FetchMovieList.class.getSimpleName();
 
 
         private String[] getMovieDataFromJson(String moviesJsonStr)
                 throws JSONException {
 
-            // These are the names of the JSON objects that need to be extracted.
+
             final String PAGES = "results";
             final String POSTER = "poster_path";
             //final String OWM_WEATHER = "weather";
@@ -87,19 +93,23 @@ public class MainActivityFragment extends Fragment {
             JSONObject movieGroupJson = new JSONObject(moviesJsonStr);
             JSONArray movieArray = movieGroupJson.getJSONArray(PAGES);
 
-            String[] resultStrs = new String[10];
+            String[] resultStrs = new String[movieArray.length()];
             for (int i = 0; i < movieArray.length(); i++) {
 
-                String description;
+                String JPGimg;
                 JSONObject moviePoster = movieArray.getJSONObject(i);
 
 
+                //“w185”.
+
                 //JSONObject movieObject = moviePoster.getJSONArray(POSTER).getJSONObject(0);
-                description = moviePoster.getString(POSTER);
+                JPGimg = moviePoster.getString(POSTER);
 
 
-                resultStrs[i] = description;
+                resultStrs[i] = "http://image.tmdb.org/t/p/." + JPGimg;
+
             }
+
             return resultStrs;
 
         }
@@ -113,22 +123,15 @@ public class MainActivityFragment extends Fragment {
                 return null;
             }
 
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            // Will contain the raw JSON response as a string.
+
             String moviesJsonStr = null;
 
-            String format = "json";
-            //String units = "metric";
-            //int numDays = 7;
 
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
+
                 final String FORECAST_BASE_URL =
                         "http://api.themoviedb.org/3/movie/popular?";
                 //final String QUERY_PARAM = "q";
@@ -147,37 +150,37 @@ public class MainActivityFragment extends Fragment {
 
                 URL url = new URL(builtUri.toString());
 
-                // Create the request to OpenWeatherMap, and open the connection
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
+
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
+
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
+
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
+
                     return null;
                 }
                 moviesJsonStr = buffer.toString();
+               // Log.d(LOG_TAG, moviesJsonStr);
+
+
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
+
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -202,18 +205,23 @@ public class MainActivityFragment extends Fragment {
         }
 
 
-        private ImageView imageView;
+
+
+        ImageView imageView;
+
         @Override
         protected void onPostExecute(String[] result) {
 
 
-            imageView = (ImageView) imageView.findViewById(R.id.imageViewMovie);
+            imageView = new ImageView(getContext());
+
             if (result != null) {
                 mMovietAdapter.clear();
                 for (String thumbMovie : result) {
-                    mMovietAdapter.add(thumbMovie);
                     Picasso.with(getContext()).load(thumbMovie).into(imageView);
-                    //new data coming in
+                    mMovietAdapter.add(thumbMovie);
+                    //Picasso.with(getContext()).load(thumbMovie).into(imageView);
+
                 }
             }
 
@@ -221,4 +229,5 @@ public class MainActivityFragment extends Fragment {
 
     }
 }
+
 
