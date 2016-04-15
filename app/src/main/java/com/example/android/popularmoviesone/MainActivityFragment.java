@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ import java.util.Arrays;
  */
 public class MainActivityFragment extends Fragment {
 
+    private PosterAdapter thumbPosters;
 
     private ArrayAdapter<String> mMovietAdapter;
 
@@ -54,20 +56,28 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mMovietAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.movie_item,
-                R.id.posterImg,
-                new ArrayList<String>()
-        );
+        mMovietAdapter =
+                new ArrayAdapter<String>(
+                        getActivity(),
+                        R.layout.movie_item,
+                        R.id.posterImg,
+                        new ArrayList<String>()
+
+                );
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.movieGrid);
-        gridView.setAdapter(mMovietAdapter);
-        gridView.setColumnWidth(100);
-        gridView.setVisibility(GridView.GONE);
+        thumbPosters = new PosterAdapter(getActivity(), Arrays.asList(mMovietAdapter));
+
+        gridView.setVisibility(thumbPosters);
 
 
         return rootView;
@@ -207,18 +217,18 @@ public class MainActivityFragment extends Fragment {
 
 
 
-        ImageView imageView;
+        //ImageView imageView;
 
         @Override
         protected void onPostExecute(String[] result) {
 
 
-            imageView = new ImageView(getContext());
+            //imageView = new ImageView(getContext());
 
             if (result != null) {
                 mMovietAdapter.clear();
                 for (String thumbMovie : result) {
-                    Picasso.with(getContext()).load(thumbMovie).into(imageView);
+                    //Picasso.with(getContext()).load(thumbMovie).into(imageView);
                     mMovietAdapter.add(thumbMovie);
                     //Picasso.with(getContext()).load(thumbMovie).into(imageView);
 
