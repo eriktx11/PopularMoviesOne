@@ -9,15 +9,18 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.ActionBarActivity;
+//import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,58 +42,51 @@ import java.util.Arrays;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainGrid extends ActionBarActivity {
 
-    private PosterAdapter thumbPosters;
+    private static final String LOG_TAG = MainGrid.class.getSimpleName();
+    //private PosterAdapter thumbPosters;
+    private PosterAdapter mGridAdapter;
+    private GridView mGridView;
+    private ArrayList<GridItem> mGridData;
 
-    private ArrayAdapter<String> mMovietAdapter;
+    //private ArrayAdapter<String> mMovietAdapter;
 
-    public MainActivityFragment() {
-    }
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
         FetchMovieList loadMovies = new FetchMovieList();
         loadMovies.execute();
-    }
+    }*/
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main_grid);
+        mGridView = (GridView) findViewById(R.id.movieGrid);
+
+        mGridData = new ArrayList<>();
+        mGridAdapter = new PosterAdapter(this, R.layout.movie_item, mGridData);
+        mGridView.setAdapter(mGridAdapter);
+
+
+        new FetchMovieList().execute();
+
+
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        mMovietAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.movie_item,
-                        R.id.posterImg,
-                        new ArrayList<String>()
-
-                );
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.movieGrid);
-        thumbPosters = new PosterAdapter(getActivity(), Arrays.asList(mMovietAdapter));
-
-        gridView.setVisibility(thumbPosters);
-
-
-        return rootView;
-    }
-
-
+    public String result;
     public class FetchMovieList extends AsyncTask<String, Void, String[]> {
-        private final String LOG_TAG = FetchMovieList.class.getSimpleName();
+     //   private final String LOG_TAG = FetchMovieList.class.getSimpleName();
 
 
         private String[] getMovieDataFromJson(String moviesJsonStr)
                 throws JSONException {
 
+            result = "0";
 
             final String PAGES = "results";
             final String POSTER = "poster_path";
@@ -103,25 +99,26 @@ public class MainActivityFragment extends Fragment {
             JSONObject movieGroupJson = new JSONObject(moviesJsonStr);
             JSONArray movieArray = movieGroupJson.getJSONArray(PAGES);
 
+            GridItem item;
             String[] resultStrs = new String[movieArray.length()];
             for (int i = 0; i < movieArray.length(); i++) {
 
                 String JPGimg;
                 JSONObject moviePoster = movieArray.getJSONObject(i);
-
-
-                //“w185”.
-
-                //JSONObject movieObject = moviePoster.getJSONArray(POSTER).getJSONObject(0);
+                item = new GridItem();
                 JPGimg = moviePoster.getString(POSTER);
-
-
                 resultStrs[i] = "http://image.tmdb.org/t/p/." + JPGimg;
+                item.setImage(resultStrs[i]);
+                mGridData.add(item);
 
             }
 
-            return resultStrs;
+            if (resultStrs!=null){
+                result="1";
+            }else{
+              result="0";}
 
+            return null;
         }
 
 
@@ -185,7 +182,7 @@ public class MainActivityFragment extends Fragment {
                     return null;
                 }
                 moviesJsonStr = buffer.toString();
-               // Log.d(LOG_TAG, moviesJsonStr);
+                // Log.d(LOG_TAG, moviesJsonStr);
 
 
             } catch (IOException e) {
@@ -222,18 +219,14 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] result) {
 
-
             //imageView = new ImageView(getContext());
 
-            if (result != null) {
-                mMovietAdapter.clear();
-                for (String thumbMovie : result) {
-                    //Picasso.with(getContext()).load(thumbMovie).into(imageView);
-                    mMovietAdapter.add(thumbMovie);
-                    //Picasso.with(getContext()).load(thumbMovie).into(imageView);
+            //if (result[0] =="1") {
+               mGridAdapter.setGridData(mGridData);
 
-                }
-            }
+              //  }else {
+                //Toast.makeText(MainGrid.this, "fail to display", Toast.LENGTH_SHORT).show();
+            //}
 
         }
 
