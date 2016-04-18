@@ -20,6 +20,14 @@
         </intent-filter>
         </activity>
 
+        <activity
+            android:name=".DetailPoster"
+            android:label="Details"
+            android:parentActivityName=".MainGrid" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.popularmoviesone.MainGrid" />
+        </activity>
 
     </application>
 
