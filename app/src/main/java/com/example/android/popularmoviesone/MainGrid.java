@@ -50,11 +50,9 @@ public class MainGrid extends ActionBarActivity {
     private PosterAdapter mGridAdapter;
     private GridView mGridView;
     private ArrayList<GridItem> mGridData;
-    //private ArrayAdapter<String> mMovieDetailAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -96,8 +94,6 @@ public class MainGrid extends ActionBarActivity {
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //Get item at position
-                //GridItem item = (GridItem) parent.getItemAtPosition(position);
                 GridItem item = mGridData.get(position);
                 Intent intent = new Intent(MainGrid.this, DetailPoster.class);
                 ImageView imageView = (ImageView) v.findViewById(R.id.posterImg);
@@ -231,8 +227,6 @@ public class MainGrid extends ActionBarActivity {
                         return null;
                     }
                     moviesJsonStr = buffer.toString();
-                    // Log.d(LOG_TAG, moviesJsonStr);
-
 
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Error ", e);
