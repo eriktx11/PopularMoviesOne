@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -39,37 +40,31 @@ import java.util.ArrayList;
 public class DetailPoster extends ActionBarActivity {
 
 
-    private static final int ANIM_DURATION = 600;
     private TextView OverviewTextView;
     private TextView textTitle;
     private TextView textRate;
     private TextView textDate;
     private ImageView imageView;
 
-    private int mLeftDelta;
-    private int mTopDelta;
-    private float mWidthScale;
-    private float mHeightScale;
+    //private int mLeftDelta;
+    //private int mTopDelta;
+    //private float mWidthScale;
+    //private float mHeightScale;
 
     private FrameLayout frameLayout;
     private ColorDrawable colorDrawable;
 
-    private int thumbnailTop;
-    private int thumbnailLeft;
-    private int thumbnailWidth;
-    private int thumbnailHeight;
+    //private int thumbnailTop;
+    //private int thumbnailLeft;
+    //private int thumbnailWidth;
+    //private int thumbnailHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Setting details screen layout
         setContentView(R.layout.movie_detail_info);
 
-      //  android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-       // actionBar.hide();
-
-        //retrieves the thumbnail data
         Bundle bundle = getIntent().getExtras();
         //thumbnailTop = bundle.getInt("top");
         //thumbnailLeft = bundle.getInt("left");
@@ -103,61 +98,25 @@ public class DetailPoster extends ActionBarActivity {
         }
 
 
-
-
-
-/*
-    private PosterAdapter mGridAdapter;
-    private GridView mGridView;
-    private ArrayList<GridItem> mGridData;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main_grid);
-        mGridView = (GridView) findViewById(R.id.movieGrid);
-
-        mGridData = new ArrayList<>();
-        mGridAdapter = new PosterAdapter(this, R.layout.movie_item, mGridData);
-        mGridView.setAdapter(mGridAdapter);
-
-
-
-        setContentView(R.layout.movie_detail);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailFragment())
-                    .commit();
-        }
-    }
-*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.detail, menu);
-        //return true;
 
         getMenuInflater().inflate(R.menu.detail, menu);
-
         return true;
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-     /*   if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }*/
+        //int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                NavUtils.navigateUpTo(this, intent);
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

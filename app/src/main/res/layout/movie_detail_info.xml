@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:background="#f0f0f0"
     android:padding="18dp"
-    android:weightSum="1"
-    android:nestedScrollingEnabled="false">
+    android:weightSum="1">
 
 
     <LinearLayout

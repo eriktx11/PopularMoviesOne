@@ -49,7 +49,6 @@ public class PosterAdapter extends ArrayAdapter<GridItem> {
             LayoutInflater inflater = ((Activity) mContex).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            //holder.titleTextView = (TextView) row.findViewById(R.id.posterText);
             holder.imageView = (ImageView) row.findViewById(R.id.posterImg);
             row.setTag(holder);
                 }
@@ -59,8 +58,6 @@ public class PosterAdapter extends ArrayAdapter<GridItem> {
 
         GridItem item = mGridData.get(position);
 
-        //holder.titleTextView.setText(Html.fromHtml(item.getTitle()));
-
         Picasso.with(mContex).load(item.getImage()).into(holder.imageView);
 
         return row;
@@ -68,9 +65,7 @@ public class PosterAdapter extends ArrayAdapter<GridItem> {
     }
 
     static class ViewHolder{
-      //  TextView titleTextView;
         ImageView imageView;
-
     }
 
 }

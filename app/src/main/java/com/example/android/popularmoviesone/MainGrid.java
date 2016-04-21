@@ -59,43 +59,6 @@ public class MainGrid extends ActionBarActivity {
         return true;
     }
 
-   /* @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-
-       setContentView(R.layout.main_grid);
-        mGridView = (GridView) findViewById(R.id.movieGrid);
-
-        mGridData = new ArrayList<>();
-        mGridAdapter = new PosterAdapter(this, R.layout.movie_item, mGridData);
-        mGridView.setAdapter(mGridAdapter);*/
-
-      /*  mMovieDetailAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.movie_detail_info, // The name of the layout ID.
-                        R.id.movie_text_detail, // The ID of the textview to populate.
-                        new ArrayList<String>());
-
-        View rootView = inflater.inflate(R.layout.movie_detail, container, false);*/
-
-        // Get a reference to the ListView, and attach this adapter to it.
-       /* ListView listView = (ListView) rootView.findViewById(R.id.container);
-        listView.setAdapter(mMovieDetailAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String forecast = mMovieDetailAdapter.getItem(position);
-                Intent intent = new Intent(getActivity(), DetailPoster.class)
-                        .putExtra(Intent.EXTRA_TEXT, forecast);
-                startActivity(intent);
-            }
-        });*/
-
-       // return null;
-       // }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -117,6 +80,12 @@ public class MainGrid extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState==null) {
+
+            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
+        }
+
+
         setContentView(R.layout.main_grid);
         mGridView = (GridView) findViewById(R.id.movieGrid);
 
@@ -137,34 +106,18 @@ public class MainGrid extends ActionBarActivity {
                 int[] screenLocation = new int[2];
                 imageView.getLocationOnScreen(screenLocation);
 
-                //Pass the image title and url to DetailsActivity
-                //intent.putExtra("left", screenLocation[0]).
-                //       putExtra("top", screenLocation[1]).
-                //       putExtra("width", imageView.getWidth()).
-                //       putExtra("height", imageView.getHeight()).
                 intent.putExtra("overview", item.getOverview()).
                         putExtra("image", item.getImage()).
                         putExtra("title", item.getTitle()).
                         putExtra("rate", item.getRate()).
                         putExtra("date", item.getDate());
 
-                //Start details activity
+
                 startActivity(intent);
             }
         });
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
-    }
-
-
-
-        //new DetailPoster();
-        //}
 
 
 
