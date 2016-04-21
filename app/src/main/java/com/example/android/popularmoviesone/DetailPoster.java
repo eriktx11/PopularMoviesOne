@@ -61,10 +61,10 @@ public class DetailPoster extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         //Setting details screen layout
-        setContentView(R.layout.movie_item);
+        setContentView(R.layout.movie_detail_info);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+      //  android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+       // actionBar.hide();
 
         //retrieves the thumbnail data
         Bundle bundle = getIntent().getExtras();
@@ -73,17 +73,17 @@ public class DetailPoster extends ActionBarActivity {
         //thumbnailWidth = bundle.getInt("width");
         //thumbnailHeight = bundle.getInt("height");
 
+
         String overview = bundle.getString("overview");
-        String image = bundle.getString("poster_path");
+        String image = bundle.getString("image");
 
         //initialize and set the image description
-        OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
-        OverviewTextView.setText(Html.fromHtml(overview));
+        //OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
+        //OverviewTextView.setText(Html.fromHtml(overview));
 
         //Set image url
         imageView = (ImageView) findViewById(R.id.movie_id_detail);
         Picasso.with(this).load(image).into(imageView);
-
 
         }
 
@@ -148,40 +148,5 @@ public class DetailPoster extends ActionBarActivity {
     }
 
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class DetailFragment extends android.support.v4.app.Fragment {
-
-        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-        private static final String FORCAST_SHARE_HASHTAG = " #SunshineApp";
-        private String mForecastStr;
-
-
-
-        public DetailFragment() {
-            setHasOptionsMenu(true);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.movie_detail, container, false);
-
-            // The detail Activity called via intent.  Inspect the intent for forecast data.
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                mForecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                //((TextView) rootView.findViewById(R.id.detail_text))
-                  //      .setText(mForecastStr);
-            }
-
-            return rootView;
-        }
-
-
-    }
 }
 

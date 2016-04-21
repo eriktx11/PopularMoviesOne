@@ -3,7 +3,7 @@ package com.example.android.popularmoviesone;
 
 public class GridItem {
     private String image;
-    private String title;
+  //  private String title;
     private String overview;
 
     public GridItem() {
@@ -18,13 +18,13 @@ public class GridItem {
         this.image = image;
     }
 
-    public String getTitle() {
-        return title;
-    }
+  //  public String getTitle() {
+  //      return title;
+   // }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  //  public void setTitle(String title) {
+    //    this.title = title;
+   // }
 
     public void setOverview(String overview) {
         this.overview = overview;

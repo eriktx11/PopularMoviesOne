@@ -139,24 +139,30 @@ public class MainGrid extends ActionBarActivity {
 
                 //Pass the image title and url to DetailsActivity
                 //intent.putExtra("left", screenLocation[0]).
-                 //       putExtra("top", screenLocation[1]).
-                 //       putExtra("width", imageView.getWidth()).
-                 //       putExtra("height", imageView.getHeight()).
-                        intent.putExtra("overview", item.getOverview()).
-                        putExtra("poster_path", item.getImage());
+                //       putExtra("top", screenLocation[1]).
+                //       putExtra("width", imageView.getWidth()).
+                //       putExtra("height", imageView.getHeight()).
+                intent.putExtra("overview", item.getOverview()).
+                        putExtra("image", item.getImage());
 
                 //Start details activity
                 startActivity(intent);
             }
         });
+    }
 
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
         new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
+    }
+
+
 
         //new DetailPoster();
         //}
-    }
+
 
 
         public String result;
