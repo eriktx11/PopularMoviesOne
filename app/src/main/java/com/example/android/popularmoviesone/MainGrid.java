@@ -128,8 +128,8 @@ public class MainGrid extends ActionBarActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Get item at position
-                GridItem item = (GridItem) parent.getItemAtPosition(position);
-
+                //GridItem item = (GridItem) parent.getItemAtPosition(position);
+                GridItem item = mGridData.get(position);
                 Intent intent = new Intent(MainGrid.this, DetailPoster.class);
                 ImageView imageView = (ImageView) v.findViewById(R.id.posterImg);
 
@@ -143,7 +143,10 @@ public class MainGrid extends ActionBarActivity {
                 //       putExtra("width", imageView.getWidth()).
                 //       putExtra("height", imageView.getHeight()).
                 intent.putExtra("overview", item.getOverview()).
-                        putExtra("image", item.getImage());
+                        putExtra("image", item.getImage()).
+                        putExtra("title", item.getTitle()).
+                        putExtra("rate", item.getRate()).
+                        putExtra("date", item.getDate());
 
                 //Start details activity
                 startActivity(intent);
@@ -178,9 +181,9 @@ public class MainGrid extends ActionBarActivity {
                 final String PAGES = "results";
                 final String POSTER = "poster_path";
                 final String OVERVIEW = "overview";
-                //final String OWM_WEATHER = "weather";
-                //final String OWM_TEMPERATURE = "temp";
-                //final String OWM_MAX = "max";
+                final String TITLE = "original_title";
+                final String RATE = "vote_average";
+                final String DATE = "release_date";
                 //final String OWM_MIN = "min";
                 //final String OWM_DESCRIPTION = "main";
 
@@ -193,13 +196,22 @@ public class MainGrid extends ActionBarActivity {
 
                     String JPGimg;
                     String MovieOverview;
+                    String MovieTitle;
+                    String MovieRate;
+                    String MovieDate;
                     JSONObject moviePoster = movieArray.getJSONObject(i);
                     item = new GridItem();
                     JPGimg = moviePoster.getString(POSTER);
                     MovieOverview = moviePoster.getString(OVERVIEW);
+                    MovieTitle = moviePoster.getString(TITLE);
+                    MovieRate = moviePoster.getString(RATE);
+                    MovieDate = moviePoster.getString(DATE);
                     resultStrs[i] = "http://image.tmdb.org/t/p/w185/" + JPGimg;
                     item.setImage(resultStrs[i]);
                     item.setOverview(MovieOverview);
+                    item.setTitle(MovieTitle);
+                    item.setRate(MovieRate);
+                    item.setDate(MovieDate);
                     mGridData.add(item);
 
                 }

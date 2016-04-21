@@ -41,6 +41,9 @@ public class DetailPoster extends ActionBarActivity {
 
     private static final int ANIM_DURATION = 600;
     private TextView OverviewTextView;
+    private TextView textTitle;
+    private TextView textRate;
+    private TextView textDate;
     private ImageView imageView;
 
     private int mLeftDelta;
@@ -76,10 +79,22 @@ public class DetailPoster extends ActionBarActivity {
 
         String overview = bundle.getString("overview");
         String image = bundle.getString("image");
+        String title = bundle.getString("title");
+        String rate = bundle.getString("rate");
+        String date = bundle.getString("date");
 
         //initialize and set the image description
-        //OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
-        //OverviewTextView.setText(Html.fromHtml(overview));
+        OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
+        OverviewTextView.setText(Html.fromHtml(overview));
+
+        textTitle = (TextView) findViewById(R.id.MovieTitle);
+        textTitle.setText(Html.fromHtml(title));
+
+        textRate = (TextView) findViewById(R.id.MovieRating);
+        textRate.setText(Html.fromHtml("Rating: "+rate+"/10"));
+
+        textDate = (TextView) findViewById(R.id.MovieReleaseDate);
+        textDate.setText(Html.fromHtml("Release date: "+date));
 
         //Set image url
         imageView = (ImageView) findViewById(R.id.movie_id_detail);
