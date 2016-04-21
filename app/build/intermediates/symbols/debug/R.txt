@@ -488,7 +488,6 @@ int id end 0x7f0c001a
 int id end_padder 0x7f0c0062
 int id expand_activities_button 0x7f0c0025
 int id expanded_menu 0x7f0c0038
-int id flavor_text 0x7f0c0054
 int id home 0x7f0c0004
 int id homeAsUp 0x7f0c000d
 int id icon 0x7f0c0029
@@ -510,6 +509,7 @@ int id none 0x7f0c000e
 int id normal 0x7f0c000a
 int id parentPanel 0x7f0c002d
 int id posterImg 0x7f0c0055
+int id posterText 0x7f0c0054
 int id progress_circular 0x7f0c0005
 int id progress_horizontal 0x7f0c0006
 int id radio 0x7f0c003b

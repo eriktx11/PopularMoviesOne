@@ -143,7 +143,7 @@ public class MainGrid extends ActionBarActivity {
                  //       putExtra("width", imageView.getWidth()).
                  //       putExtra("height", imageView.getHeight()).
                         intent.putExtra("overview", item.getOverview()).
-                        putExtra("image", item.getImage());
+                        putExtra("poster_path", item.getImage());
 
                 //Start details activity
                 startActivity(intent);

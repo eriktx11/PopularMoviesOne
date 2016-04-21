@@ -1651,7 +1651,6 @@ containing a value of this type.
         public static final int end_padder=0x7f0c0062;
         public static final int expand_activities_button=0x7f0c0025;
         public static final int expanded_menu=0x7f0c0038;
-        public static final int flavor_text=0x7f0c0054;
         public static final int home=0x7f0c0004;
         public static final int homeAsUp=0x7f0c000d;
         public static final int icon=0x7f0c0029;
@@ -1673,6 +1672,7 @@ containing a value of this type.
         public static final int normal=0x7f0c000a;
         public static final int parentPanel=0x7f0c002d;
         public static final int posterImg=0x7f0c0055;
+        public static final int posterText=0x7f0c0054;
         public static final int progress_circular=0x7f0c0005;
         public static final int progress_horizontal=0x7f0c0006;
         public static final int radio=0x7f0c003b;

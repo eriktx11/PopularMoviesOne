@@ -74,14 +74,14 @@ public class DetailPoster extends ActionBarActivity {
         //thumbnailHeight = bundle.getInt("height");
 
         String overview = bundle.getString("overview");
-        String image = bundle.getString("image");
+        String image = bundle.getString("poster_path");
 
         //initialize and set the image description
-        OverviewTextView = (TextView) findViewById(R.id.title);
+        OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
         OverviewTextView.setText(Html.fromHtml(overview));
 
         //Set image url
-        imageView = (ImageView) findViewById(R.id.posterImg);
+        imageView = (ImageView) findViewById(R.id.movie_id_detail);
         Picasso.with(this).load(image).into(imageView);
 
 
