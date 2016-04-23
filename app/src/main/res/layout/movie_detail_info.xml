@@ -84,7 +84,8 @@
                 android:text="Overview"
                 android:id="@+id/textView"
                 android:layout_above="@+id/movie_text_detail"
-
+                android:scrollbars="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:layout_gravity="top"
                 android:layout_column="0" />
 
@@ -98,17 +99,17 @@
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
-            android:layout_height="242dp"
+            android:layout_height="wrap_content"
             android:minHeight="?android:attr/listPreferredItemHeight"
             android:gravity="fill"
             android:id="@+id/movie_text_detail"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-
+            android:scrollbars="vertical"
             android:layout_column="0"
             android:layout_span="14"
-            android:height="100dp"
-            android:width="300dp"
+            android:height="220dp"
+            android:width="350dp"
             android:layout_gravity="center_vertical"
             android:editable="false" />
 

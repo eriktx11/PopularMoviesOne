@@ -16,6 +16,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -81,6 +82,7 @@ public class DetailPoster extends ActionBarActivity {
         //initialize and set the image description
         OverviewTextView = (TextView) findViewById(R.id.movie_text_detail);
         OverviewTextView.setText(Html.fromHtml(overview));
+        OverviewTextView.setMovementMethod(new ScrollingMovementMethod());
 
         textTitle = (TextView) findViewById(R.id.MovieTitle);
         textTitle.setText(Html.fromHtml(title));
