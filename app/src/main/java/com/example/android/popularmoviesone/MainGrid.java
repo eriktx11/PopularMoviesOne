@@ -50,6 +50,27 @@ public class MainGrid extends ActionBarActivity {
     private PosterAdapter mGridAdapter;
     private GridView mGridView;
     private ArrayList<GridItem> mGridData;
+    //private String SortP_URL = "http://api.themoviedb.org/3/movie/popular";
+    //private String SortR_URL = "http://api.themoviedb.org/3/movie/top_rated";
+
+
+    private String STATE_SORTING="UserSelection";
+    //static final String STATE_RATED="User_SortR";
+    int sortSelect;
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt(STATE_SORTING, sortSelect);
+        //sortSelect = savedInstanceState.getInt(STATE_SORTING);
+        //savedInstanceState.putString(STATE_RATED, SortR_URL);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,15 +79,19 @@ public class MainGrid extends ActionBarActivity {
     }
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
         mGridData = new ArrayList<>();
+
         if (id == R.id.sortP) {
+            sortSelect=1;
             new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
         }
         if (id == R.id.sortR) {
+            sortSelect=2;
             new FetchMovieList().execute("http://api.themoviedb.org/3/movie/top_rated");
         }
 
@@ -74,14 +99,27 @@ public class MainGrid extends ActionBarActivity {
     }
 
 
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mGridData = new ArrayList<>();
+
+        if (sortSelect == 1) {
+            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
+        }
+        if (sortSelect == 2) {
+            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/top_rated");
+        }
+
+    }
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState==null) {
-
-            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
-        }
 
 
         setContentView(R.layout.main_grid);
@@ -112,6 +150,17 @@ public class MainGrid extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+
+
+        if (savedInstanceState!=null){
+
+            sortSelect = savedInstanceState.getInt(STATE_SORTING);
+
+        }else {
+            sortSelect=1;
+            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
+        }
     }
 
 
