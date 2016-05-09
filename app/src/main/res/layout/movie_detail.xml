@@ -1,4 +1,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="com.example.android.popularmoviesone.DetailPoster" tools:ignore="MergeRootFrame"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie_detail_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.popularmoviesone.DetailActivity"
+    tools:ignore="MergeRootFrame">
+    <!--tools:ignore="MergeRootFrame"   android:id="@+id/movie_detail_container"-->
+  <!--  <GridView
+        android:id="@+id/movieGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:columnWidth="100dp"
+        android:drawSelectorOnTop="true"
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp"
+        android:focusable="true"
+        android:clickable="true"/>-->
+
+</FrameLayout>

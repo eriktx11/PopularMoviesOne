@@ -71,6 +71,12 @@
 
                     android:layout_column="3"
                     android:layout_gravity="center_vertical" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Make Favorite"
+                    android:id="@+id/button" />
             </LinearLayout>
 
         </LinearLayout>
@@ -91,27 +97,33 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:orientation="horizontal"
-            android:layout_weight="95.78">
+            android:layout_weight="3">
 
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:gravity="fill"
+                android:id="@+id/movie_text_detail"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:scrollbars="vertical"
+                android:layout_column="0"
+                android:layout_span="14"
+                android:height="220dp"
+                android:width="350dp"
+                android:layout_gravity="center_vertical|top"
+                android:editable="false"
+                android:layout_weight="2" />
         </LinearLayout>
 
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        <VideoView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:gravity="fill"
-            android:id="@+id/movie_text_detail"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:scrollbars="vertical"
-            android:layout_column="0"
-            android:layout_span="14"
-            android:height="220dp"
-            android:width="350dp"
-            android:layout_gravity="center_vertical"
-            android:editable="false" />
+            android:layout_height="0dp"
+            android:id="@+id/videoView"
+            android:layout_weight="2" />
 
     </LinearLayout>
 

@@ -7,6 +7,7 @@ public class GridItem {
     private String overview;
     private String rate;
     private String date;
+    private String trailer;
 
     public GridItem() {
         super();
@@ -53,4 +54,11 @@ public class GridItem {
         return date;
     }
 
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
+    }
+
+    public String getTrailer() {
+        return trailer;
+    }
 }
