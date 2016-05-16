@@ -44,7 +44,7 @@
             android:exported="false"
             android:syncable="true" />
 
-        <!-- SyncAdapter's dummy authentication service -->
+
         <service android:name=".sync.MovieAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

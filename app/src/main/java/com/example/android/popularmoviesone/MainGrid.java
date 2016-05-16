@@ -53,42 +53,43 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
         ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
+
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
         MovieSyncAdapter.initializeSyncAdapter(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 //
-          if (id == R.id.sortP) {
-//            sortSelect=1;
-//            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
-              startActivity(new Intent(this, SettingsActivity.class));
-              return true;
-        }
-        if (id == R.id.sortR) {
-//            sortSelect=2;
-//            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/top_rated");
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
-
-
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//
+////
+//          if (id == R.id.sortP) {
+////            sortSelect=1;
+////            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/popular");
+//              startActivity(new Intent(this, SettingsActivity.class));
+//              return true;
+//        }
+//        if (id == R.id.sortR) {
+////            sortSelect=2;
+////            new FetchMovieList().execute("http://api.themoviedb.org/3/movie/top_rated");
+//            startActivity(new Intent(this, SettingsActivity.class));
+//            return true;
+//        }
+//
+//
+//
 
 //        //noinspection SimplifiableIfStatement
 //        if (id == R.id.action_settings) {
@@ -100,9 +101,8 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 //            openPreferredLocationInMap();
 //            return true;
 //        }
-        return super.onOptionsItemSelected(item);
-    }
-
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected void onResume() {
@@ -133,23 +133,6 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

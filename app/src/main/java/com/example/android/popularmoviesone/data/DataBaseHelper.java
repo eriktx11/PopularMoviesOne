@@ -12,9 +12,9 @@ import com.example.android.popularmoviesone.data.MovieContract.TheMovieExtras;
  */
 public class DataBaseHelper extends SQLiteOpenHelper{
 
-    public static String DB_NAME = "MTheater.db";
+    public static String DB_NAME = "mtheater.db";
 
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 3;
 
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -24,37 +24,20 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
 
 
-        final String SQL_CREATE_MOVIE_EXTRAS_TABLE = "CREATE TABLE " + MovieContract.TheMovieExtras.TABLE_NAME + " (" +
-                TheMovieExtras._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                TheMovieExtras.C_AUTHOR + " TEXT UNIQUE NOT NULL, " +
-                TheMovieExtras.C_CONTENT + " TEXT NOT NULL, " +
-                TheMovieExtras.C_TRAILER_KEY + " TEXT NOT NULL, " +
-                " );";
-
-//        public static final String TABLE_NAME = "t_t_r_extras";
-//
-//        public static final String C_AUTHOR = "review_author";
-//        public static final String C_CONTENT = "review_content";
-//
-//        public static final String C_TRAILER_KEY = "trailer_video";
-
-        db.execSQL(SQL_CREATE_MOVIE_EXTRAS_TABLE);
-
-
         final String SQL_CREATE_MOVIE_LIST_TABLE = "CREATE TABLE " + MovieContract.TheMovieList.TABLE_NAME + " (" +
                 TheMovieList._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                TheMovieList.C_OVERVIEW + " TEXT UNIQUE NOT NULL, " +
+                TheMovieList.C_OVERVIEW + " TEXT NOT NULL, " +
                 TheMovieList.C_RATING + " TEXT NOT NULL, " +
                 TheMovieList.C_RELEASE_D + " TEXT NOT NULL, " +
-                TheMovieList.C_MOVIE_ID + " TEXT NOT NULL " +
-                TheMovieList.C_TITLE + " TEXT NOT NULL " +
-                TheMovieList.C_POPULAR + " TEXT NOT NULL " +
-                TheMovieList.C_TOP_RATED + "TEXT NOT NULL " +
-                TheMovieList.C_FAV + " TEXT NOT NULL " +
-                TheMovieList.C_POSTER_PATH + " TEXT NOT NULL " +
+                TheMovieList.C_MOVIE_ID + " TEXT NOT NULL, " +
+                TheMovieList.C_TITLE + " TEXT NOT NULL, " +
+                TheMovieList.C_POPULAR + " TEXT NOT NULL, " +
+                TheMovieList.C_TOP_RATED + " TEXT NOT NULL, " +
+                TheMovieList.C_FAV + " TEXT NOT NULL, " +
+                TheMovieList.C_POSTER_PATH + " TEXT NOT NULL, " +
 
                 " FOREIGN KEY (" + TheMovieList.C_MOVIE_ID + ") REFERENCES " +
-                TheMovieExtras.TABLE_NAME + " (" + TheMovieExtras._ID + "), " +
+                TheMovieExtras.TABLE_NAME + " (" + TheMovieExtras._ID + ") " +
                 " );";
 
 //        public static final String TABLE_NAME = "t_m_list";
@@ -72,8 +55,25 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_MOVIE_LIST_TABLE);
 
 
-    }
+        final String SQL_CREATE_MOVIE_EXTRAS_TABLE = "CREATE TABLE " + MovieContract.TheMovieExtras.TABLE_NAME + " (" +
+                TheMovieExtras._ID + " TEXT NOT NULL," +
+                TheMovieExtras.C_AUTHOR + " TEXT NOT NULL, " +
+                TheMovieExtras.C_CONTENT + " TEXT NOT NULL, " +
+                TheMovieExtras.C_TRAILER_KEY + " TEXT NOT NULL " +
+                " );";
 
+
+
+
+//        CREATE TABLE one  (
+//                ID  TEXT NOT NULL,
+//                C_AUTHOR  TEXT NOT NULL,
+//                C_CONTENT  TEXT NOT NULL,
+//                C_TRAILER_KEY TEXT NOT NULL )
+
+        db.execSQL(SQL_CREATE_MOVIE_EXTRAS_TABLE);
+
+    }
 
 
     @Override

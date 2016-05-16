@@ -450,9 +450,12 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieParts.put(MovieContract.TheMovieList.C_MOVIE_ID, id);
                 movieParts.put(MovieContract.TheMovieList.C_TITLE, title);
                 movieParts.put(MovieContract.TheMovieList.C_RELEASE_D, date);
-                movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, rate);
+             //   movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, rate);
                 movieParts.put(MovieContract.TheMovieList.C_POSTER_PATH, poster);
-                movieParts.put(MovieContract.TheMovieList.C_OVERVIEW, overview);
+             //   movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
+             //   movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");
+              //  movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, "0");
+              //  movieParts.put(MovieContract.TheMovieList.C_OVERVIEW, overview);
 
                 cVVector.add(movieParts);
             }

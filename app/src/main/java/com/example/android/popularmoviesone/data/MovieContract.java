@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
  */
 public class MovieContract {
 
-    public static final String CONTENT_AUTHORITY = "com.example.android.popularmoviesone.app";
+    public static final String CONTENT_AUTHORITY = "com.example.android.popularmoviesone";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 
@@ -27,10 +27,10 @@ public class MovieContract {
     public static final class TheMovieList implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(ALL_MOVIE).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + ALL_MOVIE;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_POPULAR;
 
         // Table name
         public static final String TABLE_NAME = "t_m_list";

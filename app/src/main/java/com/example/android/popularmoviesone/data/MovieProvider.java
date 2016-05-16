@@ -25,6 +25,10 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_REVIEWS = 103;
     static final int MOVIE_FAVS = 104;
     static final int MY_MOVIES = 105;
+    static final int MOVIE_OVERVIEW = 106;
+    static final int MOVIE_TITLE = 107;
+    static final int MOVIE_ID = 108;
+    static final int ALL = 109;
     static final int TRAILERS_REVIEWS = 200;
 
     private static final SQLiteQueryBuilder QueryBuilder;
@@ -34,6 +38,7 @@ public class MovieProvider extends ContentProvider {
 
         //This is an inner join which looks like
         //weather INNER JOIN location ON t_m_list.movie_id = t_m_extras._id
+        //SELECT * FROM t_m_list inner join t_m_extras on t_m_list.movie_id = t_m_extras._id
         QueryBuilder.setTables(
                 MovieContract.TheMovieList.TABLE_NAME + " INNER JOIN " +
                         MovieContract.TheMovieExtras.TABLE_NAME +
@@ -44,14 +49,15 @@ public class MovieProvider extends ContentProvider {
     }
 
 
+    //t_m_list.popular
     private static final String sPopular =
             MovieContract.TheMovieList.TABLE_NAME+
-                    "." + MovieContract.TheMovieList.C_POPULAR + "popular";
+                    "." + MovieContract.TheMovieList.C_POPULAR;
 
 
     private static final String sTopRated =
             MovieContract.TheMovieList.TABLE_NAME+
-                    "." + MovieContract.TheMovieList.C_TOP_RATED + "top_rated";
+                    "." + MovieContract.TheMovieList.C_TOP_RATED;
 
 
     private static final String sTrailers =
@@ -134,20 +140,21 @@ public class MovieProvider extends ContentProvider {
         );
     }
 
-//    private Cursor getWeatherByLocationSettingAndDate(
-//            Uri uri, String[] projection, String sortOrder) {
-//        String locationSetting = MovieContract.WeatherEntry.getLocationSettingFromUri(uri);
-//        long date = MovieContract.WeatherEntry.getDateFromUri(uri);
-//
-//        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sLocationSettingAndDaySelection,
-//                new String[]{locationSetting, Long.toString(date)},
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
+
+    private Cursor getAll(Uri uri, String[] projection, String sortOrder) {
+
+
+        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
 
     static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
@@ -159,22 +166,14 @@ public class MovieProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
-//        static final int MOVIE_POPULAR = 100;
-//        static final int MOVIE_TOP_RATED = 101;
-//        static final int MOVIE_TRAILERS = 102;
-//        static final int MOVIE_REVIEWS = 103;
-//        static final int MOVIE_FAVS = 104;
-//        static final int MY_MOVIES = 105;
-//        static final int TRAILERS_REVIEWS = 106;
 
-        // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, MovieContract.ALL_MOVIE, MY_MOVIES);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR, ALL);
         matcher.addURI(authority, MovieContract.PATH_POPULAR + "/*", MOVIE_POPULAR);
-        matcher.addURI(authority, MovieContract.PATH_TOP_RATED + "/*", MOVIE_TOP_RATED);
-        matcher.addURI(authority, MovieContract.PATH_TRAILERS + "/#/*", MOVIE_TRAILERS);
-        matcher.addURI(authority, MovieContract.PATH_REVIEWS + "/#/*", MOVIE_REVIEWS);
-        matcher.addURI(authority, MovieContract.PATH_FAVS + "/#", MOVIE_FAVS);
-        matcher.addURI(authority, MovieContract.ALL_MOVIE_EXTRA, TRAILERS_REVIEWS);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/*", MOVIE_TOP_RATED);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#/*", MOVIE_TRAILERS);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#/*", MOVIE_REVIEWS);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#", MOVIE_FAVS);
+        matcher.addURI(authority, MovieContract.PATH_POPULAR, TRAILERS_REVIEWS);
         return matcher;
     }
 
@@ -200,7 +199,6 @@ public class MovieProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            // Student: Uncomment and fill out these two cases
             case MOVIE_POPULAR:
                 return MovieContract.TheMovieList.CONTENT_TYPE;
             case MOVIE_TOP_RATED:
@@ -215,6 +213,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.TheMovieList.CONTENT_TYPE;
             case TRAILERS_REVIEWS:
                 return MovieContract.TheMovieExtras.CONTENT_TYPE;
+            case ALL:
+                return MovieContract.TheMovieList.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -255,7 +255,7 @@ public class MovieProvider extends ContentProvider {
                 break;
             }
             // "MY_MOVIES"
-            case MY_MOVIES: {
+            case ALL: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.TheMovieList.TABLE_NAME,
                         projection,
@@ -284,7 +284,7 @@ public class MovieProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri); // linked to update, insert, etc. Important otherwise page is blank
         return retCursor;
     }
 
@@ -298,18 +298,18 @@ public class MovieProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case MY_MOVIES: {
+            case MOVIE_POPULAR: {
                 long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
                 if ( _id > 0 )
-                    returnUri = MovieContract.TheMovieList.buildMovieUri(_id);
+                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case TRAILERS_REVIEWS: {
-                long _id = db.insert(MovieContract.TheMovieExtras.TABLE_NAME, null, values);
+            case ALL: {
+                long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
                 if ( _id > 0 )
-                    returnUri = MovieContract.TheMovieExtras.buildFavUri(_id);
+                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -378,7 +378,7 @@ public class MovieProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case MY_MOVIES:
+            case MOVIE_POPULAR:
                 db.beginTransaction();
                 int returnCount = 0;
                 try {
@@ -392,16 +392,13 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                getContext().getContentResolver().notifyChange(uri, null);  // linked to cursor Important otherwise page is blank
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);
         }
     }
 
-    // You do not need to call this method. This is a method specifically to assist the testing
-    // framework in running smoothly. You can read more at:
-    // http://developer.android.com/reference/android/content/ContentProvider.html#shutdown()
     @Override
     @TargetApi(11)
     public void shutdown() {
