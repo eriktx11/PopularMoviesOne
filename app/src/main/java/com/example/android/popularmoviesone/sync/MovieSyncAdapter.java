@@ -450,15 +450,38 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieParts.put(MovieContract.TheMovieList.C_MOVIE_ID, id);
                 movieParts.put(MovieContract.TheMovieList.C_TITLE, title);
                 movieParts.put(MovieContract.TheMovieList.C_RELEASE_D, date);
-             //   movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, rate);
+                movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, rate);
                 movieParts.put(MovieContract.TheMovieList.C_POSTER_PATH, poster);
-             //   movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
-             //   movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");
-              //  movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, "0");
-              //  movieParts.put(MovieContract.TheMovieList.C_OVERVIEW, overview);
+                movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
+                movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");
+                movieParts.put(MovieContract.TheMovieList.C_RATING, "0");
+                movieParts.put(MovieContract.TheMovieList.C_OVERVIEW, overview);
 
                 cVVector.add(movieParts);
             }
+
+//                    TheMovieList.C_MOVIE_ID + " TEXT NOT NULL, " +
+//                    TheMovieList.C_TITLE + " TEXT NOT NULL, " +
+//                    TheMovieList.C_RELEASE_D + " TEXT NOT NULL, " +
+//                    TheMovieList.C_TOP_RATED + " TEXT NOT NULL, " +
+//                    TheMovieList.C_POSTER_PATH + " TEXT NOT NULL, " +
+//                    TheMovieList.C_FAV + " TEXT NOT NULL, " +
+//                    TheMovieList.C_POPULAR + " TEXT NOT NULL, " +
+//                    TheMovieList.C_RATING + " TEXT NOT NULL, " +
+//                    TheMovieList.C_OVERVIEW + " TEXT NOT NULL, " +
+
+
+
+
+
+
+
+
+//                    " FOREIGN KEY (" + TheMovieList.C_MOVIE_ID + ") REFERENCES " +
+//                    TheMovieExtras.TABLE_NAME + " (" + TheMovieExtras._ID + ") " +
+//                    " );";
+
+
 
             int inserted = 0;
             // add to database

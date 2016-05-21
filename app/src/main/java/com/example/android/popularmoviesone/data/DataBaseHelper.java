@@ -14,7 +14,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     public static String DB_NAME = "mtheater.db";
 
-    public static final int DB_VERSION = 3;
+    public static final int DB_VERSION = 4;
 
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

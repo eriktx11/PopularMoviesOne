@@ -49,6 +49,23 @@ public class MovieProvider extends ContentProvider {
     }
 
 
+
+    private static final SQLiteQueryBuilder QueryBuilderP;
+
+    static{
+        QueryBuilderP = new SQLiteQueryBuilder();
+
+        //This is an inner join which looks like
+        //weather INNER JOIN location ON t_m_list.movie_id = t_m_extras._id
+        //SELECT * FROM t_m_list inner join t_m_extras on t_m_list.movie_id = t_m_extras._id
+        QueryBuilderP.setTables(
+                MovieContract.TheMovieList.TABLE_NAME);
+    }
+
+
+
+
+
     //t_m_list.popular
     private static final String sPopular =
             MovieContract.TheMovieList.TABLE_NAME+
@@ -78,73 +95,7 @@ public class MovieProvider extends ContentProvider {
     private Cursor getPopular(Uri uri, String[] projection, String sortOrder) {
 
 
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sPopular,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    private Cursor getTopRated(Uri uri, String[] projection, String sortOrder) {
-
-
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sTopRated,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    private Cursor getTrailers(Uri uri, String[] projection, String sortOrder) {
-
-
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sTrailers,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    private Cursor getReviews(Uri uri, String[] projection, String sortOrder) {
-
-
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sReviews,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    private Cursor getFavs(Uri uri, String[] projection, String sortOrder) {
-
-
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sFavs,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-
-    private Cursor getAll(Uri uri, String[] projection, String sortOrder) {
-
-
-        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 null,
                 null,
@@ -153,6 +104,72 @@ public class MovieProvider extends ContentProvider {
                 sortOrder
         );
     }
+
+//    private Cursor getTopRated(Uri uri, String[] projection, String sortOrder) {
+//
+//
+//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                sTopRated,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//    }
+//
+//    private Cursor getTrailers(Uri uri, String[] projection, String sortOrder) {
+//
+//
+//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                sTrailers,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//    }
+//
+//    private Cursor getReviews(Uri uri, String[] projection, String sortOrder) {
+//
+//
+//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                sReviews,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//    }
+//
+//    private Cursor getFavs(Uri uri, String[] projection, String sortOrder) {
+//
+//
+//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                sFavs,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//    }
+//
+//
+//    private Cursor getAll(Uri uri, String[] projection, String sortOrder) {
+//
+//
+//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                null,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//    }
 
 
 
@@ -167,13 +184,13 @@ public class MovieProvider extends ContentProvider {
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
 
-        matcher.addURI(authority, MovieContract.PATH_POPULAR, ALL);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/*", MOVIE_POPULAR);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/*", MOVIE_TOP_RATED);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#/*", MOVIE_TRAILERS);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#/*", MOVIE_REVIEWS);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#", MOVIE_FAVS);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR, TRAILERS_REVIEWS);
+        matcher.addURI(authority, MovieContract.ALL_MOVIE, MOVIE_POPULAR);
+        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
+//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_TOP_RATED);
+//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#/*", MOVIE_TRAILERS);
+//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#/*", MOVIE_REVIEWS);
+//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#", MOVIE_FAVS);
+//        matcher.addURI(authority, MovieContract.ALL_MOVIE, TRAILERS_REVIEWS);
         return matcher;
     }
 
@@ -187,34 +204,31 @@ public class MovieProvider extends ContentProvider {
         return true;
     }
 
-    /*
-        Students: Here's where you'll code the getType function that uses the UriMatcher.  You can
-        test this by uncommenting testGetType in TestProvider.
 
-     */
+
     @Override
     public String getType(Uri uri) {
 
         // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
-
+//content://com.example.android.popularmoviesone/t_m_list/popular
         switch (match) {
             case MOVIE_POPULAR:
-                return MovieContract.TheMovieList.CONTENT_TYPE;
-            case MOVIE_TOP_RATED:
-                return MovieContract.TheMovieList.CONTENT_TYPE;
-            case MOVIE_TRAILERS:
-                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
-            case MOVIE_REVIEWS:
-                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
-            case MOVIE_FAVS:
-                return MovieContract.TheMovieList.CONTENT_TYPE;
-            case MY_MOVIES:
-                return MovieContract.TheMovieList.CONTENT_TYPE;
-            case TRAILERS_REVIEWS:
-                return MovieContract.TheMovieExtras.CONTENT_TYPE;
+                return MovieContract.TheMovieList.CONTENT_TYPE+"/popular";
+//            case MOVIE_TOP_RATED:
+//                return MovieContract.TheMovieList.CONTENT_TYPE;
+//            case MOVIE_TRAILERS:
+//                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
+//            case MOVIE_REVIEWS:
+//                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
+//            case MOVIE_FAVS:
+//                return MovieContract.TheMovieList.CONTENT_TYPE;
+//            case MY_MOVIES:
+//                return MovieContract.TheMovieList.CONTENT_TYPE;
+//            case TRAILERS_REVIEWS:
+//                return MovieContract.TheMovieExtras.CONTENT_TYPE;
             case ALL:
-                return MovieContract.TheMovieList.CONTENT_TYPE;
+                return MovieContract.TheMovieList.CONTENT_TYPE+"/popular";
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -225,6 +239,7 @@ public class MovieProvider extends ContentProvider {
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
+
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "MOVIE/*"
@@ -234,52 +249,52 @@ public class MovieProvider extends ContentProvider {
                 break;
             }
             // "MOVIE/*"
-            case MOVIE_TOP_RATED: {
-                retCursor = getTopRated(uri, projection, sortOrder);
-                break;
-            }
-            // "MOVIE/#/*"
-            case MOVIE_TRAILERS: {
-                retCursor = getTrailers(uri, projection, sortOrder);
-                break;
-            }
-
-            // "MOVIE/#/*"
-            case MOVIE_REVIEWS: {
-                retCursor = getReviews(uri, projection, sortOrder);
-                break;
-            }
-            // "MOVIE/#"
-            case MOVIE_FAVS: {
-                retCursor = getFavs(uri, projection, sortOrder);
-                break;
-            }
+//            case MOVIE_TOP_RATED: {
+//                retCursor = getTopRated(uri, projection, sortOrder);
+//                break;
+//            }
+//            // "MOVIE/#/*"
+//            case MOVIE_TRAILERS: {
+//                retCursor = getTrailers(uri, projection, sortOrder);
+//                break;
+//            }
+//
+//            // "MOVIE/#/*"
+//            case MOVIE_REVIEWS: {
+//                retCursor = getReviews(uri, projection, sortOrder);
+//                break;
+//            }
+//            // "MOVIE/#"
+//            case MOVIE_FAVS: {
+//                retCursor = getFavs(uri, projection, sortOrder);
+//                break;
+//            }
             // "MY_MOVIES"
             case ALL: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.TheMovieList.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
                         null,
                         null,
-                        sortOrder
+                        null,
+                        null,
+                        null,
+                        null
                 );
                 break;
             }
             // "TRAILERS_REVIEWS"
-            case TRAILERS_REVIEWS: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MovieContract.TheMovieExtras.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
+//            case TRAILERS_REVIEWS: {
+//                retCursor = mOpenHelper.getReadableDatabase().query(
+//                        MovieContract.TheMovieExtras.TABLE_NAME,
+//                        projection,
+//                        selection,
+//                        selectionArgs,
+//                        null,
+//                        null,
+//                        sortOrder
+//                );
+//                break;
+           // }
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

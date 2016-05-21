@@ -52,30 +52,45 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             // using the location set by the user, which is only in the Location table.
             // So the convenience is worth it.
             MovieContract.TheMovieList.TABLE_NAME + "." + MovieContract.TheMovieList._ID,
-            MovieContract.TheMovieList.C_TITLE,
             MovieContract.TheMovieList.C_OVERVIEW,
             MovieContract.TheMovieList.C_RATING,
             MovieContract.TheMovieList.C_RELEASE_D,
-            MovieContract.TheMovieList.C_POSTER_PATH,
-            MovieContract.TheMovieList.C_FAV,
+            MovieContract.TheMovieList.C_MOVIE_ID,
+            MovieContract.TheMovieList.C_TITLE,
             MovieContract.TheMovieList.C_POPULAR,
             MovieContract.TheMovieList.C_TOP_RATED,
-            MovieContract.TheMovieList.C_MOVIE_ID,
+            MovieContract.TheMovieList.C_FAV,
+            MovieContract.TheMovieList.C_POSTER_PATH,
 
     };
+
+//    TheMovieList._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+//    TheMovieList.C_OVERVIEW + " TEXT NOT NULL, " +
+//    TheMovieList.C_RATING + " TEXT NOT NULL, " +
+//    TheMovieList.C_RELEASE_D + " TEXT NOT NULL, " +
+//    TheMovieList.C_MOVIE_ID + " TEXT NOT NULL, " +
+//    TheMovieList.C_TITLE + " TEXT NOT NULL, " +
+//    TheMovieList.C_POPULAR + " TEXT NOT NULL, " +
+//    TheMovieList.C_TOP_RATED + " TEXT NOT NULL, " +
+//    TheMovieList.C_FAV + " TEXT NOT NULL, " +
+//    TheMovieList.C_POSTER_PATH + " TEXT NOT NULL, " +
+
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
     // must change.
     static final int COL_ID = 0;
-    static final int COL_TITLE = 1;
-    static final int COL_OVERVIEW = 2;
-    static final int COL_RATING = 3;
-    static final int COL_RELEASE_D = 4;
-    static final int COL_POSTER_PATH = 5;
-    static final int COL_FAV = 6;
-    static final int COL_POPULAR = 7;
-    static final int COL_TOP_RATED = 8;
-    static final int COL_MOVIE_ID = 9;
+    static final int COL_OVERVIEW = 1;
+    static final int COL_RATING = 2;
+    static final int COL_RELEASE_D = 3;
+    static final int COL_MOVIE_ID = 4;
+    static final int COL_TITLE = 5;
+    static final int COL_POPULAR = 6;
+    static final int COL_TOP_RATED = 7;
+    static final int COL_FAV = 8;
+    static final int COL_POSTER_PATH = 9;
+
+
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item

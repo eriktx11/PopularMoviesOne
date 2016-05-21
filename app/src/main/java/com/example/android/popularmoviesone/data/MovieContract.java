@@ -14,8 +14,8 @@ public class MovieContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 
-    public static final String ALL_MOVIE = "all_movies";
-    public static final String ALL_MOVIE_EXTRA = "t_r_id";
+    public static final String ALL_MOVIE = "t_m_list";
+    public static final String ALL_MOVIE_EXTRA = "t_m_extras";
     public static final String PATH_POPULAR = "popular";
     public static final String PATH_TOP_RATED = "top_rated";
     public static final String PATH_FAVS = "favs";
@@ -23,14 +23,13 @@ public class MovieContract {
     public static final String PATH_TRAILERS = "trailers";
 
 
-
     public static final class TheMovieList implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(ALL_MOVIE).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_POPULAR;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + ALL_MOVIE;
 
         // Table name
         public static final String TABLE_NAME = "t_m_list";
