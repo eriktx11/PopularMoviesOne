@@ -68,93 +68,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
 
 
-//            private void getMovieDataFromJson(String moviesJsonStr, String trailerJsonStr)
-//                    throws JSONException {
-//
-//                result = "0";
-//
-//                final String PAGES = "results";
-//                final String POSTER = "poster_path";
-//                final String OVERVIEW = "overview";
-//                final String TITLE = "original_title";
-//                final String RATE = "vote_average";
-//                final String DATE = "release_date";
-//                final String TRAILER_ID = "id";
-//                final String KEY = "key";
-//
-//                JSONObject movieGroupJson = new JSONObject(moviesJsonStr);
-//                JSONArray movieArray = movieGroupJson.getJSONArray(PAGES);
-//
-//                GridItem item;
-//                String[] resultStrs = new String[movieArray.length()];
-//                for (int i = 0; i < movieArray.length(); i++) {
-//
-//                    String JPGimg;
-//                    String MovieOverview;
-//                    String MovieTitle;
-//                    String MovieRate;
-//                    String MovieDate;
-//                    String trailerId;
-//
-//
-//                    JSONObject moviePoster = movieArray.getJSONObject(i);
-//                    item = new GridItem();
-//                    JPGimg = moviePoster.getString(POSTER);
-//                    MovieOverview = moviePoster.getString(OVERVIEW);
-//                    MovieTitle = moviePoster.getString(TITLE);
-//                    MovieRate = moviePoster.getString(RATE);
-//                    MovieDate = moviePoster.getString(DATE);
-//                    resultStrs[i] = "http://image.tmdb.org/t/p/w185/" + JPGimg;
-//                    trailerId = moviePoster.getString(TRAILER_ID);
-//
-//                    //trailerJsonStr
-//
-//
-//
-//
-//                    String Youtube = "https://youtu.be/";
-//                    String videoTrailer;
-//
-//                    JSONObject JsonId = new JSONObject(trailerId);
-//                    JSONArray TrailerArray = JsonId.getJSONArray(PAGES);
-//
-//                    JSONObject movieTrailer = TrailerArray.getJSONObject(0);
-//                    videoTrailer = moviePoster.getString(KEY);
-//                    Youtube = Youtube + videoTrailer;
-//
-//
-//                    item.setTrailer(Youtube);
-//                    item.setImage(resultStrs[i]);
-//                    item.setOverview(MovieOverview);
-//                    item.setTitle(MovieTitle);
-//                    item.setRate(MovieRate);
-//                    item.setDate(MovieDate);
-//                    mGridData.add(item);
-//
-//                }
-
-
-
-//                final String TRAILER_BASE_URL = trailerUrl;
-//
-//                final String APPID_PARAM_T = "api_key";
-//
-//                Uri builtUri = Uri.parse(TRAILER_BASE_URL).buildUpon()
-//                        .appendQueryParameter(APPID_PARAM_T, BuildConfig.OPEN_MOVIE_API_KEY)
-//                        .build();
-//
-//                URL url_t = new URL(builtUri.toString());
-//
-//
-//                urlConnectionT = (HttpURLConnection) url_t.openConnection();
-//                urlConnectionT.setRequestMethod("GET");
-//                urlConnectionT.connect();
-//
-//                InputStream inputStreamT = urlConnectionT.getInputStream();
-//                StringBuffer bufferT = new StringBuffer();
-//                String lineT;
-
-
             final String MOVIE_BASE_URL =
                     "http://api.themoviedb.org/3/movie/popular";
             final String APPID_PARAM = "api_key";
@@ -460,26 +373,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 cVVector.add(movieParts);
             }
 
-//                    TheMovieList.C_MOVIE_ID + " TEXT NOT NULL, " +
-//                    TheMovieList.C_TITLE + " TEXT NOT NULL, " +
-//                    TheMovieList.C_RELEASE_D + " TEXT NOT NULL, " +
-//                    TheMovieList.C_TOP_RATED + " TEXT NOT NULL, " +
-//                    TheMovieList.C_POSTER_PATH + " TEXT NOT NULL, " +
-//                    TheMovieList.C_FAV + " TEXT NOT NULL, " +
-//                    TheMovieList.C_POPULAR + " TEXT NOT NULL, " +
-//                    TheMovieList.C_RATING + " TEXT NOT NULL, " +
-//                    TheMovieList.C_OVERVIEW + " TEXT NOT NULL, " +
-
-
-
-
-
-
-
-
-//                    " FOREIGN KEY (" + TheMovieList.C_MOVIE_ID + ") REFERENCES " +
-//                    TheMovieExtras.TABLE_NAME + " (" + TheMovieExtras._ID + ") " +
-//                    " );";
 
 
 
@@ -538,19 +431,9 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         // If the password doesn't exist, the account doesn't exist
         if ( null == accountManager.getPassword(newAccount) ) {
 
-        /*
-         * Add the account and account type, no password or user data
-         * If successful, return the Account object, otherwise report an error.
-         */
             if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
                 return null;
             }
-            /*
-             * If you don't set android:syncable="true" in
-             * in your <provider> element in the manifest,
-             * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
-             * here.
-             */
 
             onAccountCreated(newAccount, context);
         }

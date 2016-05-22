@@ -51,15 +51,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieContract.TheMovieList.C_RATING,
             MovieContract.TheMovieList.C_OVERVIEW,
             MovieContract.TheMovieList.C_FAV,
-            // This works because the WeatherProvider returns location data joined with
-            // weather data, even though they're stored in two different tables.
             MovieContract.TheMovieExtras.C_CONTENT,
             MovieContract.TheMovieExtras.C_AUTHOR,
             MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
 
-    // These indices are tied to DETAIL_COLUMNS.  If DETAIL_COLUMNS changes, these
-    // must change.
     public static final int COL_THE_MOVIES_ID = 0;
     public static final int COL_POPULAR = 1;
     public static final int COL_TOP_RATED = 2;

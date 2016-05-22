@@ -21,6 +21,7 @@ public class MovieContract {
     public static final String PATH_FAVS = "favs";
     public static final String PATH_REVIEWS = "reviews";
     public static final String PATH_TRAILERS = "trailers";
+    public static final String MOVIE_ID = "movie_id";
 
 
     public static final class TheMovieList implements BaseColumns {
@@ -30,6 +31,9 @@ public class MovieContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + ALL_MOVIE;
+
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + ALL_MOVIE;
 
         // Table name
         public static final String TABLE_NAME = "t_m_list";
@@ -46,8 +50,8 @@ public class MovieContract {
         public static final String C_FAV = "fav_movie";
 
 
-        public static Uri buildMovieUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
+        public static Uri buildMovieUri(String OneId) {
+            return CONTENT_URI.buildUpon().appendPath(OneId).build();
         }
 
         public static Uri buildForPopular(String PopSetting) {
@@ -71,7 +75,7 @@ public class MovieContract {
             return CONTENT_URI.buildUpon().appendPath(FavSettings).build();
         }
 
-        public static String getPopular(Uri uri) {
+        public static String getOneMovie(Uri uri) {
             return uri.getPathSegments().get(1);
         }
 
@@ -85,6 +89,14 @@ public class MovieContract {
 
         public static String getMovieId(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+
+        public static String getOneMovieUri(Uri uri) {
+            String dateString = uri.getQueryParameter(C_MOVIE_ID);
+            if (null != dateString && dateString.length() > 0)
+                return dateString;
+            else
+                return null;
         }
 
     }

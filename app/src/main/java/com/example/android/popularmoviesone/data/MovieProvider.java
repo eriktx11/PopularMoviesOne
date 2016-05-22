@@ -63,9 +63,6 @@ public class MovieProvider extends ContentProvider {
     }
 
 
-
-
-
     //t_m_list.popular
     private static final String sPopular =
             MovieContract.TheMovieList.TABLE_NAME+
@@ -77,19 +74,10 @@ public class MovieProvider extends ContentProvider {
                     "." + MovieContract.TheMovieList.C_TOP_RATED;
 
 
-    private static final String sTrailers =
-            MovieContract.TheMovieExtras.TABLE_NAME+
-                    "." + MovieContract.TheMovieExtras.C_TRAILER_KEY + "trailers";
-
-
-    private static final String sReviews =
-            MovieContract.TheMovieExtras.TABLE_NAME+
-                    "." + MovieContract.TheMovieExtras.C_CONTENT + "reviews";
-
-
-    private static final String sFavs =
+    //t_m_list.movie_id = ?
+    private static final String oneMovie =
             MovieContract.TheMovieList.TABLE_NAME+
-                    "." + MovieContract.TheMovieList.C_FAV + "favs";
+                    "." + MovieContract.TheMovieList.C_MOVIE_ID + " = ";
 
 
     private Cursor getPopular(Uri uri, String[] projection, String sortOrder) {
@@ -105,99 +93,37 @@ public class MovieProvider extends ContentProvider {
         );
     }
 
-//    private Cursor getTopRated(Uri uri, String[] projection, String sortOrder) {
-//
-//
-//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sTopRated,
-//                null,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
-//
-//    private Cursor getTrailers(Uri uri, String[] projection, String sortOrder) {
-//
-//
-//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sTrailers,
-//                null,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
-//
-//    private Cursor getReviews(Uri uri, String[] projection, String sortOrder) {
-//
-//
-//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sReviews,
-//                null,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
-//
-//    private Cursor getFavs(Uri uri, String[] projection, String sortOrder) {
-//
-//
-//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sFavs,
-//                null,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
-//
-//
-//    private Cursor getAll(Uri uri, String[] projection, String sortOrder) {
-//
-//
-//        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                null,
-//                null,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//    }
+    private Cursor getOneMove(Uri uri, String[] projection, String sortOrder) {
+
+        String MovieIdNeeded = MovieContract.TheMovieList.getOneMovie(uri);
+        String[] selectionArgs;
+        selectionArgs = new String[]{MovieIdNeeded};
+
+        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                oneMovie,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
 
 
 
     static UriMatcher buildUriMatcher() {
-        // I know what you're thinking.  Why create a UriMatcher when you can use regular
-        // expressions instead?  Because you're not crazy, that's why.
-
-        // All paths added to the UriMatcher have a corresponding code to return when a match is
-        // found.  The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case.
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
 
         matcher.addURI(authority, MovieContract.ALL_MOVIE, MOVIE_POPULAR);
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
-//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_TOP_RATED);
-//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#/*", MOVIE_TRAILERS);
-//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#/*", MOVIE_REVIEWS);
-//        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/#", MOVIE_FAVS);
-//        matcher.addURI(authority, MovieContract.ALL_MOVIE, TRAILERS_REVIEWS);
+        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*/*", MOVIE_ID);
         return matcher;
     }
 
-    /*
-        Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
-        here.
-     */
+
     @Override
     public boolean onCreate() {
         mOpenHelper = new DataBaseHelper(getContext());
@@ -214,21 +140,9 @@ public class MovieProvider extends ContentProvider {
 //content://com.example.android.popularmoviesone/t_m_list/popular
         switch (match) {
             case MOVIE_POPULAR:
-                return MovieContract.TheMovieList.CONTENT_TYPE+"/popular";
-//            case MOVIE_TOP_RATED:
-//                return MovieContract.TheMovieList.CONTENT_TYPE;
-//            case MOVIE_TRAILERS:
-//                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
-//            case MOVIE_REVIEWS:
-//                return MovieContract.TheMovieExtras.CONTENT_ITEM_TYPE;
-//            case MOVIE_FAVS:
-//                return MovieContract.TheMovieList.CONTENT_TYPE;
-//            case MY_MOVIES:
-//                return MovieContract.TheMovieList.CONTENT_TYPE;
-//            case TRAILERS_REVIEWS:
-//                return MovieContract.TheMovieExtras.CONTENT_TYPE;
-            case ALL:
-                return MovieContract.TheMovieList.CONTENT_TYPE+"/popular";
+                return MovieContract.TheMovieList.CONTENT_TYPE;
+            case MOVIE_ID:
+                return MovieContract.TheMovieList.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -248,44 +162,11 @@ public class MovieProvider extends ContentProvider {
                 retCursor = getPopular(uri, projection, sortOrder);
                 break;
             }
-            // "MOVIE/*"
-//            case MOVIE_TOP_RATED: {
-//                retCursor = getTopRated(uri, projection, sortOrder);
-//                break;
-//            }
-//            // "MOVIE/#/*"
-//            case MOVIE_TRAILERS: {
-//                retCursor = getTrailers(uri, projection, sortOrder);
-//                break;
-//            }
-//
-//            // "MOVIE/#/*"
-//            case MOVIE_REVIEWS: {
-//                retCursor = getReviews(uri, projection, sortOrder);
-//                break;
-//            }
-//            // "MOVIE/#"
-//            case MOVIE_FAVS: {
-//                retCursor = getFavs(uri, projection, sortOrder);
-//                break;
-//            }
-            // "MY_MOVIES"
-            case ALL: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MovieContract.TheMovieList.TABLE_NAME,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-                break;
-            }
-            // "TRAILERS_REVIEWS"
-//            case TRAILERS_REVIEWS: {
-//                retCursor = mOpenHelper.getReadableDatabase().query(
-//                        MovieContract.TheMovieExtras.TABLE_NAME,
+
+            case MOVIE_ID:
+            {
+//               retCursor = mOpenHelper.getReadableDatabase().query(
+//                        MovieContract.TheMovieList.TABLE_NAME,
 //                        projection,
 //                        selection,
 //                        selectionArgs,
@@ -293,8 +174,11 @@ public class MovieProvider extends ContentProvider {
 //                        null,
 //                        sortOrder
 //                );
-//                break;
-           // }
+
+                retCursor = getOneMove(uri, projection, sortOrder);
+                break;
+            }
+
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -303,9 +187,6 @@ public class MovieProvider extends ContentProvider {
         return retCursor;
     }
 
-    /*
-        Student: Add the ability to insert Locations to the implementation of this function.
-     */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
