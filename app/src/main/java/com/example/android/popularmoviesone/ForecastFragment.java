@@ -75,15 +75,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
 
 
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
     public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
+
         public void onItemSelected(Uri dateUri);
     }
 
@@ -95,8 +88,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
 
@@ -107,9 +98,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.sortP) {
             openMovies();
@@ -135,9 +124,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // The ForecastAdapter will take data from a source and
-        // use it to populate the ListView it's attached to.
 
 
         Context context;
@@ -182,19 +168,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         return rootView;
     }
-
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//            Cursor c =
-//                    getActivity().getContentResolver().query(MovieContract.TheMovieList.CONTENT_URI,
-//                            new String[]{MovieContract.TheMovieList.C_POPULAR},
-//                            null,
-//                            null,
-//                            null);
-//
-//        getLoaderManager().initLoader(FORECAST_LOADER, null, this);
-//        super.onActivityCreated(savedInstanceState);
-//    }
 
 
     @Override

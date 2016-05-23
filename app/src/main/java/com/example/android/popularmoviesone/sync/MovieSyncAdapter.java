@@ -104,8 +104,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attempting
-            // to parse it.
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -363,11 +362,11 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieParts.put(MovieContract.TheMovieList.C_MOVIE_ID, id);
                 movieParts.put(MovieContract.TheMovieList.C_TITLE, title);
                 movieParts.put(MovieContract.TheMovieList.C_RELEASE_D, date);
-                movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, rate);
+                movieParts.put(MovieContract.TheMovieList.C_TOP_RATED, "0");
                 movieParts.put(MovieContract.TheMovieList.C_POSTER_PATH, poster);
                 movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
                 movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");
-                movieParts.put(MovieContract.TheMovieList.C_RATING, "0");
+                movieParts.put(MovieContract.TheMovieList.C_RATING, rate);
                 movieParts.put(MovieContract.TheMovieList.C_OVERVIEW, overview);
 
                 cVVector.add(movieParts);

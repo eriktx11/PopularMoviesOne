@@ -77,7 +77,7 @@ public class MovieProvider extends ContentProvider {
     //t_m_list.movie_id = ?
     private static final String oneMovie =
             MovieContract.TheMovieList.TABLE_NAME+
-                    "." + MovieContract.TheMovieList.C_MOVIE_ID + " = ";
+                    "." + MovieContract.TheMovieList.C_MOVIE_ID + " = ? ";
 
 
     private Cursor getPopular(Uri uri, String[] projection, String sortOrder) {
@@ -93,7 +93,7 @@ public class MovieProvider extends ContentProvider {
         );
     }
 
-    private Cursor getOneMove(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getOneMove(Uri uri, String[] projection, String[] Arguments) {
 
         String MovieIdNeeded = MovieContract.TheMovieList.getOneMovie(uri);
         String[] selectionArgs;
@@ -105,10 +105,27 @@ public class MovieProvider extends ContentProvider {
                 selectionArgs,
                 null,
                 null,
-                sortOrder
+                null
         );
     }
 
+
+
+//    static UriMatcher buildUriMatcher() {
+//        // All paths added to the UriMatcher have a corresponding code to return when a match is
+//        // found.  The code passed into the constructor represents the code to return for the root
+//        // URI.  It's common to use NO_MATCH as the code for this case.
+//        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE, MOVIE);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/#", MOVIE_DETAIL);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/*", MOVIES_SORT_BY);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/*/*", MOVIES_FAVORITE);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TRAILER, TRAILER);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TRAILER+"/#", TRAILERS_MOVIE);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_REVIEW, REVIEW);
+//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_REVIEW+"/#", REVIEWS_MOVIE);
+//        return matcher;
+//    }
 
 
 
@@ -116,9 +133,11 @@ public class MovieProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
-
+//content://com.example.android.popularmoviesone/t_m_list/popular
         matcher.addURI(authority, MovieContract.ALL_MOVIE, MOVIE_POPULAR);
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
+
+//content://com.example.android.popularmoviesone/t_m_list/movie_id
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*/*", MOVIE_ID);
         return matcher;
     }
@@ -175,7 +194,7 @@ public class MovieProvider extends ContentProvider {
 //                        sortOrder
 //                );
 
-                retCursor = getOneMove(uri, projection, sortOrder);
+                retCursor = getOneMove(uri, projection, selectionArgs);
                 break;
             }
 

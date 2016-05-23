@@ -51,9 +51,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieContract.TheMovieList.C_RATING,
             MovieContract.TheMovieList.C_OVERVIEW,
             MovieContract.TheMovieList.C_FAV,
-            MovieContract.TheMovieExtras.C_CONTENT,
-            MovieContract.TheMovieExtras.C_AUTHOR,
-            MovieContract.TheMovieExtras.C_TRAILER_KEY
+           // MovieContract.TheMovieExtras.C_CONTENT,
+           // MovieContract.TheMovieExtras.C_AUTHOR,
+           // MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
 
     public static final int COL_THE_MOVIES_ID = 0;
@@ -67,9 +67,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_OVERVIEW = 8;
     public static final int C_FAV = 9;
 
-    public static final int COL_CONTENT = 10;
-    public static final int COL_AUTHOR = 11;
-    public static final int COL_TRAILER_KEY = 12;
+  //  public static final int COL_CONTENT = 10;
+  //  public static final int COL_AUTHOR = 11;
+  //  public static final int COL_TRAILER_KEY = 12;
 
     private TextView OverviewTextView;
     private TextView textTitle;
@@ -122,14 +122,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return null;
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-            // Read weather condition ID from cursor
-            int movieId = data.getInt(COL_MOVIE_ID);
 
+            String poster = data.getString(COL_POSTER_PATH);
 
-            Picasso.with(getContext()).load(COL_POSTER_PATH).into(imageView);
+            poster = "http://image.tmdb.org/t/p/w185/"+poster;
+
+            Picasso.with(getContext()).load(poster).into(imageView);
 
             // Read description from cursor and update view
             String overview = data.getString(COL_OVERVIEW);
@@ -144,9 +154,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String rate = data.getString(COL_RATING);
             textRate.setText(rate);
 
-            String trailer = "https://youtu.be/"+data.getString(COL_TRAILER_KEY);
-            Uri uri = Uri.parse(trailer);
-            VideoTrailer.setVideoURI(uri);
+//            String trailer = "https://youtu.be/"+data.getString(COL_TRAILER_KEY);
+//            Uri uri = Uri.parse(trailer);
+//            VideoTrailer.setVideoURI(uri);
 
         }
     }

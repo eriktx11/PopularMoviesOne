@@ -51,7 +51,7 @@ public class MovieContract {
 
 
         public static Uri buildMovieUri(String OneId) {
-            return CONTENT_URI.buildUpon().appendPath(OneId).build();
+            return CONTENT_URI.buildUpon().appendPath("popular").appendPath(OneId).build();
         }
 
         public static Uri buildForPopular(String PopSetting) {
@@ -76,7 +76,7 @@ public class MovieContract {
         }
 
         public static String getOneMovie(Uri uri) {
-            return uri.getPathSegments().get(1);
+            return uri.getPathSegments().get(2);
         }
 
         public static String getTopRated(Uri uri) {
