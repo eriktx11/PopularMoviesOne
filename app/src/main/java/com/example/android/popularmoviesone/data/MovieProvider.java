@@ -29,6 +29,7 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_TITLE = 107;
     static final int MOVIE_ID = 108;
     static final int ALL = 109;
+    static final int MOVIE_SELECT = 110;
     static final int TRAILERS_REVIEWS = 200;
 
     private static final SQLiteQueryBuilder QueryBuilder;
@@ -80,18 +81,32 @@ public class MovieProvider extends ContentProvider {
                     "." + MovieContract.TheMovieList.C_MOVIE_ID + " = ? ";
 
 
-    private Cursor getPopular(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getPopular(Uri uri, String[] projection, String selection, String[] selectionArgs) {
 
 
         return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
                 projection,
+                selection,
+                selectionArgs,
                 null,
                 null,
-                null,
-                null,
-                sortOrder
+                null
+
         );
     }
+
+//    private Cursor getPopular(Uri uri, String[] projection, String Sortorder) {
+//
+//        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                null,
+//                null,
+//                null,
+//                null,
+//                Sortorder
+//
+//        );
+//    }
 
     private Cursor getOneMove(Uri uri, String[] projection, String[] Arguments) {
 
@@ -109,6 +124,20 @@ public class MovieProvider extends ContentProvider {
         );
     }
 
+
+//    private Cursor getForMenu(Uri uri, String[] projection, String selection, String[] selectionArgs) {
+//
+//
+//        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                null
+//
+//        );
+//    }
 
 
 //    static UriMatcher buildUriMatcher() {
@@ -136,8 +165,10 @@ public class MovieProvider extends ContentProvider {
 //content://com.example.android.popularmoviesone/t_m_list/popular
         matcher.addURI(authority, MovieContract.ALL_MOVIE, MOVIE_POPULAR);
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
+//content://com.example.android.popularmoviesone/t_m_list/selection
+       // matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_SELECT);
 
-//content://com.example.android.popularmoviesone/t_m_list/movie_id
+//content://com.example.android.popularmoviesone/t_m_list/popular/movie_id
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*/*", MOVIE_ID);
         return matcher;
     }
@@ -162,6 +193,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.TheMovieList.CONTENT_TYPE;
             case MOVIE_ID:
                 return MovieContract.TheMovieList.CONTENT_TYPE;
+            case MOVIE_SELECT:
+                return MovieContract.TheMovieList.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -178,9 +211,17 @@ public class MovieProvider extends ContentProvider {
             // "MOVIE/*"
             case MOVIE_POPULAR:
             {
-                retCursor = getPopular(uri, projection, sortOrder);
+                //retCursor = getPopular(uri, projection, sortOrder);
+
+                retCursor = getPopular(uri, projection, selection, selectionArgs);
+
                 break;
             }
+//            case MOVIE_SELECT:
+//            {
+//                retCursor = getForMenu(uri, projection, selection, selectionArgs);
+//                break;
+//            }
 
             case MOVIE_ID:
             {
@@ -193,16 +234,14 @@ public class MovieProvider extends ContentProvider {
 //                        null,
 //                        sortOrder
 //                );
-
                 retCursor = getOneMove(uri, projection, selectionArgs);
                 break;
             }
 
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri); // linked to update, insert, etc. Important otherwise page is blank
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
 
@@ -221,14 +260,14 @@ public class MovieProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case ALL: {
-                long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
-                if ( _id > 0 )
-                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                break;
-            }
+//            case ALL: {
+//                long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
+//                if ( _id > 0 )
+//                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
+//                else
+//                    throw new android.database.SQLException("Failed to insert row into " + uri);
+//                break;
+//            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

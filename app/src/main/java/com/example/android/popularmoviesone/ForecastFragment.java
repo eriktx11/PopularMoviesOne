@@ -6,9 +6,11 @@ package com.example.android.popularmoviesone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -28,6 +30,7 @@ import com.example.android.popularmoviesone.data.MovieProvider;
 import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -40,6 +43,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
+    SharedPreferences mSettings;
+    private SharedPreferences.Editor mEditor;
+    private int SELECT = 0;
 
     private static final int FORECAST_LOADER = 0;
 
@@ -99,21 +105,68 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
+
+        mForecastAdapter.notifyDataSetChanged();
+        Cursor cursor = (Cursor) mGridView.getItemAtPosition(0);
+
+        Uri movieSelectUri = MovieContract.TheMovieList.buildForPopular(
+                "popular");
+
+        String SELECTION="";
+        List<String> selectionArgs = new ArrayList<String>();
+
+        final String[] SELECTION_ARGS = new String[selectionArgs.size()];
+
+        selectionArgs.add("1");
+        selectionArgs.toArray(SELECTION_ARGS);
+
         int id = item.getItemId();
         if (id == R.id.sortP) {
-            openMovies();
-            return true;
+           // openMovies();
+            SELECT = 1;
+            //mEditor.putInt("select", SELECT);
+            //syncAfter(SELECT);
+            //mEditor.apply();
+            //bundle.putInt("select", 1);
+            //return true;
+
+
+                    SELECTION = "popular=?";
+
+             new CursorLoader(getActivity(),
+                    movieSelectUri,
+                    FORECAST_COLUMNS,
+                    SELECTION,
+                    SELECTION_ARGS,
+                    null
+            );
+
         }
 
         if (id == R.id.sortR) {
-            openMovies();
-            return true;
+            SELECT = 2;
+            //mEditor.putInt("select", SELECT);
+            //syncAfter(SELECT);
+            //mEditor.apply();
+            //bundle.putInt("select", 1);
+            //return true;
+
+
+            SELECTION = "top_rated=?";
+
+            new CursorLoader(getActivity(),
+                    movieSelectUri,
+                    FORECAST_COLUMNS,
+                    SELECTION,
+                    SELECTION_ARGS,
+                    null
+            );
         }
 
-        if (id == R.id.favs) {
-            openMovies();
-            return true;
-        }
+
+        MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
         return super.onOptionsItemSelected(item);
     }
 
@@ -125,6 +178,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mEditor = mSettings.edit();
+        mEditor.apply();
 
         Context context;
         context = getContext();
@@ -177,15 +233,70 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     // since we read the location when we create the loader, all we need to do is restart things
-    void onLocationChanged( ) {
-        openMovies();
-        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+//    void onLocationChanged( ) {
+//        openMovies(1);
+//        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+//    }
+
+
+    private void onLocationChanged(){
+
+    //getLoaderManager().initLoader(FORECAST_LOADER, null, this);
+    //mForecastAdapter.notifyDataSetChanged();
+      //  mGridView.setAdapter(mForecastAdapter);
+
+        openMovies(SELECT);
+    getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
+    private void openMovies(int UserSelect) {
+
+        MovieSyncAdapter.syncImmediately(getActivity(), UserSelect);
+//        Uri movieSelectUri = MovieContract.TheMovieList.buildForPopular(
+//                "selection");
+//
+//        String SELECTION="";
+//        List<String> selectionArgs = new ArrayList<String>();
+//
+//        final String[] SELECTION_ARGS = new String[selectionArgs.size()];
+//
+//        int select = mSettings.getInt("option", SELECT);
+//
+//        if(select!=0) {
+//            selectionArgs.add("1");
+//            selectionArgs.toArray(SELECTION_ARGS);
+//            switch (select) {
+//                case 1:
+//                    SELECTION = "popular=?";
+//                    break;
+//                case 2:
+//                    SELECTION = "top_rated=?";
+//                    break;
+//
+//            }
+//            select=0;
+//
+//            return new CursorLoader(getActivity(),
+//                    movieSelectUri,
+//                    FORECAST_COLUMNS,
+//                    SELECTION,
+//                    SELECTION_ARGS,
+//                    null
+//            );
+//
+//
+//        }else {
+//
+//            return new CursorLoader(getActivity(),
+//                    movieSelectUri,
+//                    FORECAST_COLUMNS,
+//                    null,
+//                    null,
+//                    null
+//            );
+//        }
 
 
-    private void openMovies() {
-        MovieSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override
@@ -205,15 +316,59 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         Uri weatherForLocationUri = MovieContract.TheMovieList.buildForPopular(
                 "popular");
 
-        return new CursorLoader(getActivity(),
-                weatherForLocationUri,
-                FORECAST_COLUMNS,
-                null,
-                null,
-                null
-        );
-    }
+//        String SELECTION="";
+//        List<String> selectionArgs = new ArrayList<String>();
+//
+//
+//
+//        final String[] SELECTION_ARGS = new String[selectionArgs.size()];
+//
+//
+//        int select = mSettings.getInt("option", SELECT);
+//
+//        if(select!=0) {
+//            selectionArgs.add("1");
+//            selectionArgs.toArray(SELECTION_ARGS);
+//            switch (select) {
+//                case 1:
+//                    SELECTION = "popular=?";
+//                    break;
+//                case 2:
+//                    SELECTION = "top_rated=?";
+//                    break;
+//
+//            }
+//
+//
+//            return new CursorLoader(getActivity(),
+//                    weatherForLocationUri,
+//                    FORECAST_COLUMNS,
+//                    SELECTION,
+//                    SELECTION_ARGS,
+//                    null
+//            );
 
+
+       // }else {
+
+            return new CursorLoader(getActivity(),
+                    weatherForLocationUri,
+                    FORECAST_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+        //}
+
+
+//        if(bundle.getInt("select")==1){
+//            SELECTION = "popular=?";
+//        }
+//        if(bundle.getInt("select")==2){
+//            SELECTION = "top_rated=?";
+//        }
+
+    }
 
 
 

@@ -58,6 +58,11 @@ public class MovieContract {
             return CONTENT_URI.buildUpon().appendPath(PopSetting).build();
         }
 
+        public static Uri buildForMenu(String Selection) {
+            return CONTENT_URI.buildUpon().appendPath(Selection).build();
+        }
+
+
 
         public static Uri buildForTopRated(String TopRSetting) {
             return CONTENT_URI.buildUpon().appendPath(TopRSetting).build();
