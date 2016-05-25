@@ -51,11 +51,11 @@ public class MovieContract {
 
 
         public static Uri buildMovieUri(String OneId) {
-            return CONTENT_URI.buildUpon().appendPath("popular").appendPath(OneId).build();
+            return CONTENT_URI.buildUpon().appendPath("movie").appendPath(OneId).build();
         }
 
-        public static Uri buildForPopular(String PopSetting) {
-            return CONTENT_URI.buildUpon().appendPath(PopSetting).build();
+        public static Uri buildForPopular() {
+            return CONTENT_URI.buildUpon().build();
         }
 
         public static Uri buildForMenu(String Selection) {

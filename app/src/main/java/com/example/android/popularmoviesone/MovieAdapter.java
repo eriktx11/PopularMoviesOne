@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.android.popularmoviesone.data.MovieContract;
@@ -45,6 +46,8 @@ public class MovieAdapter extends CursorAdapter{
 
 
     public MovieAdapter (Context contex, Cursor c, int flags){
+
+
         super(contex, c, flags);
     }
 

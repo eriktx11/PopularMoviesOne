@@ -163,8 +163,8 @@ public class MovieProvider extends ContentProvider {
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
 //content://com.example.android.popularmoviesone/t_m_list/popular
-        matcher.addURI(authority, MovieContract.ALL_MOVIE, MOVIE_POPULAR);
-        matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
+        matcher.addURI(authority, MovieContract.ALL_MOVIE, MY_MOVIES);
+    //    matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_POPULAR);
 //content://com.example.android.popularmoviesone/t_m_list/selection
        // matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*", MOVIE_SELECT);
 
@@ -189,7 +189,7 @@ public class MovieProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 //content://com.example.android.popularmoviesone/t_m_list/popular
         switch (match) {
-            case MOVIE_POPULAR:
+            case MY_MOVIES:
                 return MovieContract.TheMovieList.CONTENT_TYPE;
             case MOVIE_ID:
                 return MovieContract.TheMovieList.CONTENT_TYPE;
@@ -209,9 +209,8 @@ public class MovieProvider extends ContentProvider {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "MOVIE/*"
-            case MOVIE_POPULAR:
+            case MY_MOVIES:
             {
-                //retCursor = getPopular(uri, projection, sortOrder);
 
                 retCursor = getPopular(uri, projection, selection, selectionArgs);
 
@@ -252,10 +251,10 @@ public class MovieProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case MOVIE_POPULAR: {
+            case MY_MOVIES: {
                 long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
                 if ( _id > 0 )
-                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
+                    returnUri = MovieContract.TheMovieList.buildForPopular();
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -332,7 +331,7 @@ public class MovieProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case MOVIE_POPULAR:
+            case MY_MOVIES:
                 db.beginTransaction();
                 int returnCount = 0;
                 try {

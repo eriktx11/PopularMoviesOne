@@ -75,6 +75,9 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 case 2: MOVIE_BASE_URL =
                         "http://api.themoviedb.org/3/movie/top_rated";
                     break;
+                default:MOVIE_BASE_URL =
+                        "http://api.themoviedb.org/3/movie/popular";
+                    select=1;
             }
 
             final String APPID_PARAM = "api_key";
