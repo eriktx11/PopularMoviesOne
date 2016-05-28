@@ -50,7 +50,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
-    private int SELECT = 0;
+    private int SELECT = 1;
 
     private static final int FORECAST_LOADER = 0;
 
@@ -119,67 +119,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
-      //  Uri movieSelectUri = MovieContract.TheMovieList.buildForPopular();
-
-
-
-        //MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
-
-     //   MovieSyncAdapter.initializeSyncAdapter(getContext());
-
-//        String SELECTION="";
-//        List<String> selectionArgs = new ArrayList<String>();
-//
-//        final String[] SELECTION_ARGS = new String[selectionArgs.size()];
-//
-//        selectionArgs.add("1");
-//        selectionArgs.toArray(SELECTION_ARGS);
-
         int id = item.getItemId();
         if (id == R.id.sortP) {
-           // openMovies();
             SELECT = 1;
-            //syncAfter(SELECT);
-            //mEditor.apply();
-            //bundle.putInt("select", 1);
-            //return true;
-          //  SELECTION = "popular=?";
-
-//             new CursorLoader(getActivity(),
-//                    movieSelectUri,
-//                    FORECAST_COLUMNS,
-//                    SELECTION,
-//                    SELECTION_ARGS,
-//                    null
-//            );
 
         }
 
         if (id == R.id.sortR) {
             SELECT = 2;
-            //syncAfter(SELECT);
-            //mEditor.apply();
-            //bundle.putInt("select", 1);
-            //return true;
-
-
-          //  SELECTION = "top_rated=?";
-
-//            new CursorLoader(getActivity(),
-//                    movieSelectUri,
-//                    FORECAST_COLUMNS,
-//                    SELECTION,
-//                    SELECTION_ARGS,
-//                    null
-//            );
         }
 
         editor.putInt("select", SELECT);
         editor.apply();
 
-        //mForecastAdapter.notifyDataSetChanged();
-        //mForecastAdapter.swapCursor(null);
-        //MovieSyncAdapter.initializeSyncAdapter(this);
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
         MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
         return super.onOptionsItemSelected(item);
@@ -210,6 +162,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                                 .onItemSelected(MovieContract.TheMovieList.buildMovieUri(cursor.getString(COL_MOVIE_ID)));
 
                     }
+
                     mPosition = position;
                 }
         });
@@ -267,58 +220,27 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         Uri weatherForLocationUri = MovieContract.TheMovieList.buildForPopular();
 
-        String SELECTION = "";
-        //List<String> selectionArgs = new ArrayList<String>();
-
-
-        //String[] SELECTION_ARGS = new String[selectionArgs.size()];
-
+        String SELECTION = "popular=?";
 
         int select = sPrefs.getInt("select", SELECT);
-
-        if (select != 0) {
-            //selectionArgs.add("1");
-            String[] args = {"1"};
-            switch (select) {
-                case 1:
-                    SELECTION = "popular=?";
-                    break;
-                case 2:
-                    SELECTION = "top_rated=?";
-                    break;
-
-            }
-
-
-            return new CursorLoader(getActivity(),
-                    weatherForLocationUri,
-                    FORECAST_COLUMNS,
-                    SELECTION,
-                    args,
-                    null
-            );
-
-
-        } else {
-
-            return new CursorLoader(getActivity(),
-                    weatherForLocationUri,
-                    FORECAST_COLUMNS,
-                    null,
-                    null,
-                    null
-            );
-            //}
-
-
-//        if(bundle.getInt("select")==1){
-//            SELECTION = "popular=?";
-//        }
-//        if(bundle.getInt("select")==2){
-//            SELECTION = "top_rated=?";
-//        }
-
+        String[] args = {"1"};
+        //if (select != 0) {
+        switch (select) {
+            case 1:
+                SELECTION = "popular=?";
+                break;
+            case 2:
+                SELECTION = "top_rated=?";
+                break;
         }
+
+        return new CursorLoader(getActivity(),
+                weatherForLocationUri,
+                FORECAST_COLUMNS,
+                SELECTION,
+                args,
+                null
+        );
     }
 
 
@@ -328,8 +250,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
         if (mPosition != GridView.INVALID_POSITION) {
-            // If we don't need to restart the loader, and there's a desired position to restore
-            // to, do so now.
             mGridView.smoothScrollToPosition(mPosition);
         }
     }

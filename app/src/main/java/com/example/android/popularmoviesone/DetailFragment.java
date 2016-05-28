@@ -1,7 +1,11 @@
 package com.example.android.popularmoviesone;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.AvoidXfermode;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +16,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +28,37 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.example.android.popularmoviesone.data.MovieContract;
+import com.example.android.popularmoviesone.interfaces.PosterExtrasAPI;
+import com.example.android.popularmoviesone.models.ModelTrailerList;
+import com.example.android.popularmoviesone.models.TrailerList;
+import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
+import com.example.android.popularmoviesone.sync.PosterSyncAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.xml.transform.Result;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by erikllerena on 4/29/16.
@@ -37,6 +70,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private String mForecast;
     private Uri mUri;
+    private String extractedMovieId;
 
     private static final int DETAIL_LOADER = 0;
 
@@ -51,9 +85,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieContract.TheMovieList.C_RATING,
             MovieContract.TheMovieList.C_OVERVIEW,
             MovieContract.TheMovieList.C_FAV,
-           // MovieContract.TheMovieExtras.C_CONTENT,
-           // MovieContract.TheMovieExtras.C_AUTHOR,
-           // MovieContract.TheMovieExtras.C_TRAILER_KEY
+//            MovieContract.TheMovieExtras.C_CONTENT,
+//            MovieContract.TheMovieExtras.C_AUTHOR,
+//            MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
 
     public static final int COL_THE_MOVIES_ID = 0;
@@ -67,9 +101,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_OVERVIEW = 8;
     public static final int C_FAV = 9;
 
-  //  public static final int COL_CONTENT = 10;
-  //  public static final int COL_AUTHOR = 11;
-  //  public static final int COL_TRAILER_KEY = 12;
+    public static final int COL_CONTENT = 10;
+    public static final int COL_AUTHOR = 11;
+    public static final int COL_TRAILER_KEY = 12;
 
     private TextView OverviewTextView;
     private TextView textTitle;
@@ -77,31 +111,94 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView textDate;
     private ImageView imageView;
     private VideoView VideoTrailer;
+    private PosterExtrasAPI posterExtraAPI;
+
+    private List<TrailerList> data;
+
 
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
 
         Bundle arguments = getArguments();
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+            extractedMovieId = mUri.getPathSegments().get(2);
+            //PosterSyncAdapter.syncImmediately(getActivity(), extractedMovieId);
+
+            String movieUrl = "http://api.themoviedb.org/3/";
+            Gson gson = new GsonBuilder().create();
+
+            Retrofit retrofit = new Retrofit.Builder().
+                    baseUrl(movieUrl)
+                    .addConverterFactory(GsonConverterFactory.create(gson)).build();
+
+            posterExtraAPI = retrofit.create(PosterExtrasAPI.class);
+
+            final Call<ModelTrailerList> MTrailerListCall = posterExtraAPI.getTrailerList(extractedMovieId, BuildConfig.OPEN_MOVIE_API_KEY);
+
+            MTrailerListCall.enqueue(new Callback<ModelTrailerList>() {
+                @Override
+                public void onResponse(Call<ModelTrailerList> call, Response<ModelTrailerList> response) {
+                    int statusCode = response.code();
+                    ModelTrailerList trailerList = response.body();
+                    Log.d("TrailerList", "onResponse: " + statusCode);
+
+                    //Vector<ContentValues> cVVector = new Vector<ContentValues>(2);
+
+                   // String key = trailerList;
+
+                    //int i=0;
+
+                    ContentValues movieParts = new ContentValues();
+
+                    //movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, key);
+                    //movieParts.put(MovieContract.TheMovieList.C_TITLE, content);
+                    //movieParts.put(MovieContract.TheMovieList.C_RELEASE_D, author);
+
+                    //cVVector.add(movieParts);
+
+
+                }
+                @Override
+                public void onFailure(Call<ModelTrailerList> call, Throwable t) {
+
+                    Log.d("TrailerList", "onResponse: "+t.getMessage());
+                }
+
+            });
+
+
         }
+
+
 
         View rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.movie_id_detail);
         OverviewTextView = (TextView) rootView.findViewById(R.id.movie_text_detail);
+        OverviewTextView.setMovementMethod(new ScrollingMovementMethod());
         textTitle = (TextView) rootView.findViewById(R.id.MovieTitle);
         textRate = (TextView) rootView.findViewById(R.id.MovieRating);
         textDate = (TextView) rootView.findViewById(R.id.MovieReleaseDate);
         VideoTrailer = (VideoView) rootView.findViewById(R.id.videoView);
 
+        ImageView iv = (ImageView) rootView.findViewById(R.id.favbtn);
+        Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
+        Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
+        iv.setImageBitmap(bMapScaled);
+
+        ImageView playImg = (ImageView) rootView.findViewById(R.id.playbtn);
+        Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
+        Bitmap bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
+        playImg.setImageBitmap(bMapPlayScaled);
+
         return rootView;
-
-
     }
 
 
@@ -153,10 +250,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String rate = data.getString(COL_RATING);
             textRate.setText(rate);
-
-//            String trailer = "https://youtu.be/"+data.getString(COL_TRAILER_KEY);
-//            Uri uri = Uri.parse(trailer);
-//            VideoTrailer.setVideoURI(uri);
 
         }
     }

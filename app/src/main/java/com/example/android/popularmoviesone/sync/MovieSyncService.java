@@ -11,21 +11,21 @@ import android.util.Log;
 public class MovieSyncService extends Service {
 
     private static final Object sSyncAdapterLock = new Object();
-    private static MovieSyncAdapter sSunshineSyncAdapter = null;
+    private static MovieSyncAdapter MovieSyncAdapter = null;
 
     @Override
     public void onCreate() {
         Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
         synchronized (sSyncAdapterLock) {
-            if (sSunshineSyncAdapter == null) {
-                sSunshineSyncAdapter = new MovieSyncAdapter(getApplicationContext(), true);
+            if (MovieSyncAdapter == null) {
+                MovieSyncAdapter = new MovieSyncAdapter(getApplicationContext(), true);
             }
         }
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return sSunshineSyncAdapter.getSyncAdapterBinder();
+        return MovieSyncAdapter.getSyncAdapterBinder();
     }
 
 }

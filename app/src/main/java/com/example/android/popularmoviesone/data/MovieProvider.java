@@ -49,16 +49,11 @@ public class MovieProvider extends ContentProvider {
                         "." + MovieContract.TheMovieExtras._ID);
     }
 
-
-
     private static final SQLiteQueryBuilder QueryBuilderP;
 
     static{
         QueryBuilderP = new SQLiteQueryBuilder();
 
-        //This is an inner join which looks like
-        //weather INNER JOIN location ON t_m_list.movie_id = t_m_extras._id
-        //SELECT * FROM t_m_list inner join t_m_extras on t_m_list.movie_id = t_m_extras._id
         QueryBuilderP.setTables(
                 MovieContract.TheMovieList.TABLE_NAME);
     }
@@ -81,7 +76,7 @@ public class MovieProvider extends ContentProvider {
                     "." + MovieContract.TheMovieList.C_MOVIE_ID + " = ? ";
 
 
-    private Cursor getPopular(Uri uri, String[] projection, String selection, String[] selectionArgs) {
+    private Cursor getAllMovies(Uri uri, String[] projection, String selection, String[] selectionArgs) {
 
 
         return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
@@ -94,19 +89,6 @@ public class MovieProvider extends ContentProvider {
 
         );
     }
-
-//    private Cursor getPopular(Uri uri, String[] projection, String Sortorder) {
-//
-//        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                null,
-//                null,
-//                null,
-//                null,
-//                Sortorder
-//
-//        );
-//    }
 
     private Cursor getOneMove(Uri uri, String[] projection, String[] Arguments) {
 
@@ -123,38 +105,6 @@ public class MovieProvider extends ContentProvider {
                 null
         );
     }
-
-
-//    private Cursor getForMenu(Uri uri, String[] projection, String selection, String[] selectionArgs) {
-//
-//
-//        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null
-//
-//        );
-//    }
-
-
-//    static UriMatcher buildUriMatcher() {
-//        // All paths added to the UriMatcher have a corresponding code to return when a match is
-//        // found.  The code passed into the constructor represents the code to return for the root
-//        // URI.  It's common to use NO_MATCH as the code for this case.
-//        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE, MOVIE);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/#", MOVIE_DETAIL);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/*", MOVIES_SORT_BY);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIE+"/*/*", MOVIES_FAVORITE);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TRAILER, TRAILER);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TRAILER+"/#", TRAILERS_MOVIE);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_REVIEW, REVIEW);
-//        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_REVIEW+"/#", REVIEWS_MOVIE);
-//        return matcher;
-//    }
 
 
 
@@ -203,8 +153,6 @@ public class MovieProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        // Here's the switch statement that, given a URI, will determine what kind of request it is,
-        // and query the database accordingly.
 
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
@@ -212,27 +160,12 @@ public class MovieProvider extends ContentProvider {
             case MY_MOVIES:
             {
 
-                retCursor = getPopular(uri, projection, selection, selectionArgs);
-
+                retCursor = getAllMovies(uri, projection, selection, selectionArgs);
                 break;
             }
-//            case MOVIE_SELECT:
-//            {
-//                retCursor = getForMenu(uri, projection, selection, selectionArgs);
-//                break;
-//            }
 
             case MOVIE_ID:
             {
-//               retCursor = mOpenHelper.getReadableDatabase().query(
-//                        MovieContract.TheMovieList.TABLE_NAME,
-//                        projection,
-//                        selection,
-//                        selectionArgs,
-//                        null,
-//                        null,
-//                        sortOrder
-//                );
                 retCursor = getOneMove(uri, projection, selectionArgs);
                 break;
             }
@@ -259,14 +192,6 @@ public class MovieProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-//            case ALL: {
-//                long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, values);
-//                if ( _id > 0 )
-//                    returnUri = MovieContract.TheMovieList.buildForPopular("popular");
-//                else
-//                    throw new android.database.SQLException("Failed to insert row into " + uri);
-//                break;
-//            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -345,7 +270,7 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);  // linked to cursor Important otherwise page is blank
+                getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);

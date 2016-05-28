@@ -178,6 +178,9 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 rate = ScanEachMovie.getString(RATE);
                 date = ScanEachMovie.getString(DATE);
                 id = ScanEachMovie.getString(MOVIE_ID);
+//                key = ScanEachMovie.getString(KEY);
+//                content = ScanEachMovie.getString(CONTENT);
+//                author = ScanEachMovie.getString(AUTHOR);
 
                 ContentValues movieParts = new ContentValues();
 

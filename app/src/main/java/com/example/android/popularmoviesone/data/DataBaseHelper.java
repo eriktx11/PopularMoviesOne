@@ -42,18 +42,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 TheMovieExtras.TABLE_NAME + " (" + TheMovieExtras._ID + ") " +
                 " );";
 
-//        public static final String TABLE_NAME = "t_m_list";
-//
-//        public static final String C_RELEASE_D = "release_date";
-//
-//        public static final String C_RATING = "movie_raiting";
-//
-//        public static final String C_TITLE = "movie_title";
-//        public static final String C_MOVIE_ID = "movie_id";
-//        public static final String C_OVERVIEW = "overview";
-//        public static final String C_POSTER_PATH = "poster_path";
-//        public static final String C_FAV = "fav_movie";
-
         db.execSQL(SQL_CREATE_MOVIE_LIST_TABLE);
 
 
@@ -63,15 +51,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 TheMovieExtras.C_CONTENT + " TEXT NOT NULL, " +
                 TheMovieExtras.C_TRAILER_KEY + " TEXT NOT NULL " +
                 " );";
-
-
-
-
-//        CREATE TABLE one  (
-//                ID  TEXT NOT NULL,
-//                C_AUTHOR  TEXT NOT NULL,
-//                C_CONTENT  TEXT NOT NULL,
-//                C_TRAILER_KEY TEXT NOT NULL )
 
         db.execSQL(SQL_CREATE_MOVIE_EXTRAS_TABLE);
 
