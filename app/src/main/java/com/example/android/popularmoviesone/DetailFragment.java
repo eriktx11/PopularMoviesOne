@@ -1,13 +1,21 @@
 package com.example.android.popularmoviesone;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SyncRequest;
 import android.database.Cursor;
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -23,7 +31,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -31,8 +43,6 @@ import com.example.android.popularmoviesone.data.MovieContract;
 import com.example.android.popularmoviesone.interfaces.PosterExtrasAPI;
 import com.example.android.popularmoviesone.models.ModelTrailerList;
 import com.example.android.popularmoviesone.models.TrailerList;
-import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
-import com.example.android.popularmoviesone.sync.PosterSyncAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -48,6 +58,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -85,10 +96,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieContract.TheMovieList.C_RATING,
             MovieContract.TheMovieList.C_OVERVIEW,
             MovieContract.TheMovieList.C_FAV,
-//            MovieContract.TheMovieExtras.C_CONTENT,
-//            MovieContract.TheMovieExtras.C_AUTHOR,
-//            MovieContract.TheMovieExtras.C_TRAILER_KEY
+            MovieContract.TheMovieExtras.TABLE_NAME + "." + MovieContract.TheMovieExtras._ID,
+            MovieContract.TheMovieExtras.C_CONTENT,
+            MovieContract.TheMovieExtras.C_AUTHOR,
+            MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
+
 
     public static final int COL_THE_MOVIES_ID = 0;
     public static final int COL_POPULAR = 1;
@@ -101,9 +114,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_OVERVIEW = 8;
     public static final int C_FAV = 9;
 
-    public static final int COL_CONTENT = 10;
-    public static final int COL_AUTHOR = 11;
-    public static final int COL_TRAILER_KEY = 12;
+    public static final int COL_EXTRA_MOVIE_ID = 10;
+    public static final int COL_CONTENT = 11;
+    public static final int COL_AUTHOR = 12;
+    public static final int COL_TRAILER_KEY = 13;
 
     private TextView OverviewTextView;
     private TextView textTitle;
@@ -111,10 +125,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView textDate;
     private ImageView imageView;
     private VideoView VideoTrailer;
+
+    private ImageButton playTrailer;
     private PosterExtrasAPI posterExtraAPI;
 
-    private List<TrailerList> data;
+    private static final int FORECAST_LOADER = 1;
 
+    public static final int SYNC_INTERVAL = 60 * 180;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+
+    private SharedPreferences sPrefs;
+    SharedPreferences.Editor editor;
+    String fromList="";
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -124,7 +146,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        editor = sPrefs.edit();
+        editor.putString("theLink", fromList);
+        editor.apply();
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -141,7 +166,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             posterExtraAPI = retrofit.create(PosterExtrasAPI.class);
 
-            final Call<ModelTrailerList> MTrailerListCall = posterExtraAPI.getTrailerList(extractedMovieId, BuildConfig.OPEN_MOVIE_API_KEY);
+            Call<ModelTrailerList> MTrailerListCall = posterExtraAPI.getTrailerList(extractedMovieId, BuildConfig.OPEN_MOVIE_API_KEY);
 
             MTrailerListCall.enqueue(new Callback<ModelTrailerList>() {
                 @Override
@@ -150,20 +175,31 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     ModelTrailerList trailerList = response.body();
                     Log.d("TrailerList", "onResponse: " + statusCode);
 
-                    //Vector<ContentValues> cVVector = new Vector<ContentValues>(2);
+                    List <TrailerList> list = trailerList.getResults();
+                    String key="";
+                    String content="TBD";
+                    String author="me";
 
-                   // String key = trailerList;
+                    int count=0;
+                    for (TrailerList element : list) {
 
-                    //int i=0;
+                        key = element.getKey();
+                        count++;
+
+                    }
 
                     ContentValues movieParts = new ContentValues();
 
-                    //movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, key);
-                    //movieParts.put(MovieContract.TheMovieList.C_TITLE, content);
-                    //movieParts.put(MovieContract.TheMovieList.C_RELEASE_D, author);
+                    Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
+                    movieParts.put(MovieContract.TheMovieExtras._ID, extractedMovieId);
+                    movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, key);
+                    movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, author);
+                    movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, content);
 
-                    //cVVector.add(movieParts);
-
+                    cVVector.add(movieParts);
+                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cvArray);
+                    getContext().getContentResolver().bulkInsert(MovieContract.TheMovieExtras.CONTENT_URI, cvArray);
 
                 }
                 @Override
@@ -174,10 +210,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             });
 
-
         }
-
-
 
         View rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.movie_id_detail);
@@ -187,6 +220,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         textRate = (TextView) rootView.findViewById(R.id.MovieRating);
         textDate = (TextView) rootView.findViewById(R.id.MovieReleaseDate);
         VideoTrailer = (VideoView) rootView.findViewById(R.id.videoView);
+        playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
 
         ImageView iv = (ImageView) rootView.findViewById(R.id.favbtn);
         Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
@@ -198,12 +232,90 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Bitmap bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
         playImg.setImageBitmap(bMapPlayScaled);
 
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+        Context context = getContext();
+
+        syncImmediately(context, 1);
+
         return rootView;
     }
 
 
+    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+        Account account = getSyncAccount(context);
+        String authority = context.getString(R.string.content_authority);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // we can enable inexact timers in our periodic sync
+            SyncRequest request = new SyncRequest.Builder().
+                    syncPeriodic(syncInterval, flexTime).
+                    setSyncAdapter(account, authority).
+                    setExtras(new Bundle()).build();
+            ContentResolver.requestSync(request);
+        } else {
+            ContentResolver.addPeriodicSync(account,
+                    authority, new Bundle(), syncInterval);
+        }
+    }
+
+    public static void syncImmediately(Context context, int select) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(getSyncAccount(context),
+                context.getString(R.string.content_authority), bundle);
+    }
+
+
+    public static Account getSyncAccount(Context context) {
+        // Get an instance of the Android account manager
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+
+        // Create the account type and default account
+        Account newAccount = new Account(
+                context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
+
+        // If the password doesn't exist, the account doesn't exist
+        if ( null == accountManager.getPassword(newAccount) ) {
+
+            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
+                return null;
+            }
+
+            onAccountCreated(newAccount, context);
+        }
+        return newAccount;
+    }
+
+    private static void onAccountCreated(Account newAccount, Context context) {
+        /*
+         * Since we've created an account
+         */
+        DetailFragment.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+
+        /*
+         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
+         */
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
+
+        /*
+         * Finally, let's do a sync to get things started
+         */
+        syncImmediately(context, 1);
+    }
+
+
+    public static void initializeSyncAdapter(Context context) {
+        getSyncAccount(context);
+    }
+
+
+
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
         if ( null != mUri ) {
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
@@ -226,17 +338,39 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-
-
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
+
         if (data != null && data.moveToFirst()) {
+
 
             String poster = data.getString(COL_POSTER_PATH);
 
             poster = "http://image.tmdb.org/t/p/w185/"+poster;
 
             Picasso.with(getContext()).load(poster).into(imageView);
+
+
+            fromList = data.getString(COL_TRAILER_KEY);
+
+            fromList = "https://youtu.be/"+fromList;
+
+            editor.putString("theLink", fromList);
+            editor.apply();
+
+            playTrailer.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick (View v)  {
+
+                    String internalData = sPrefs.getString("theLink", fromList);
+                    Intent toYouT = new Intent(Intent.ACTION_VIEW, Uri.parse(internalData));
+                    startActivity(toYouT);
+
+                }
+            });
+
+
 
             // Read description from cursor and update view
             String overview = data.getString(COL_OVERVIEW);

@@ -209,9 +209,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 cVVector.add(movieParts);
             }
 
-
-
-
             int inserted = 0;
             // add to database
             if ( cVVector.size() > 0 ) {

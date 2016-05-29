@@ -38,7 +38,7 @@ public class MovieProvider extends ContentProvider {
         QueryBuilder = new SQLiteQueryBuilder();
 
         //This is an inner join which looks like
-        //weather INNER JOIN location ON t_m_list.movie_id = t_m_extras._id
+        //t_m_list INNER t_m_extras location ON t_m_list.movie_id = t_m_extras._id
         //SELECT * FROM t_m_list inner join t_m_extras on t_m_list.movie_id = t_m_extras._id
         QueryBuilder.setTables(
                 MovieContract.TheMovieList.TABLE_NAME + " INNER JOIN " +
@@ -96,7 +96,7 @@ public class MovieProvider extends ContentProvider {
         String[] selectionArgs;
         selectionArgs = new String[]{MovieIdNeeded};
 
-        return QueryBuilderP.query(mOpenHelper.getReadableDatabase(),
+        return QueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 oneMovie,
                 selectionArgs,
@@ -120,6 +120,8 @@ public class MovieProvider extends ContentProvider {
 
 //content://com.example.android.popularmoviesone/t_m_list/popular/movie_id
         matcher.addURI(authority, MovieContract.ALL_MOVIE + "/*/*", MOVIE_ID);
+
+        matcher.addURI(authority, MovieContract.ALL_MOVIE_EXTRA, MOVIE_TRAILERS);
         return matcher;
     }
 
@@ -145,6 +147,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.TheMovieList.CONTENT_TYPE;
             case MOVIE_SELECT:
                 return MovieContract.TheMovieList.CONTENT_TYPE;
+            case MOVIE_TRAILERS:
+                return MovieContract.TheMovieExtras.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -255,13 +259,35 @@ public class MovieProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
+        int returnCount;
         switch (match) {
             case MY_MOVIES:
                 db.beginTransaction();
-                int returnCount = 0;
+                returnCount = 0;
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(MovieContract.TheMovieList.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+//                "review_author";
+//                public static final String C_CONTENT = "review_content";
+//
+//                public static final String C_TRAILER_KEY = "trailer_video";
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case MOVIE_TRAILERS:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(MovieContract.TheMovieExtras.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

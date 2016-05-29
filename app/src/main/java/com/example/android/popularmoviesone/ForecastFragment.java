@@ -66,7 +66,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             MovieContract.TheMovieList.C_TOP_RATED,
             MovieContract.TheMovieList.C_FAV,
             MovieContract.TheMovieList.C_POSTER_PATH,
-
+//            MovieContract.TheMovieExtras.TABLE_NAME + "." + MovieContract.TheMovieExtras._ID,
+//            MovieContract.TheMovieExtras.C_CONTENT,
+//            MovieContract.TheMovieExtras.C_AUTHOR,
+//            MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
 
 
@@ -83,7 +86,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     private SharedPreferences sPrefs;
-    //final SharedPreferences sPrefs = this.getActivity().getSharedPreferences("pref", 0);
     SharedPreferences.Editor editor;
 
 
@@ -160,7 +162,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     if (cursor != null) {
                         ((Callback) getActivity())
                                 .onItemSelected(MovieContract.TheMovieList.buildMovieUri(cursor.getString(COL_MOVIE_ID)));
-
                     }
 
                     mPosition = position;

@@ -35,8 +35,6 @@ public class MovieAdapter extends CursorAdapter{
     // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
 
-
-
     private final String LOG_TAG = MovieAdapter.class.getSimpleName();
     String[] contents;
 

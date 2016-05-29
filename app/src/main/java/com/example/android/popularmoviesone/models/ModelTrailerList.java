@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class ModelTrailerList{
 
-
     @SerializedName("id")
     @Expose
     private int id;
