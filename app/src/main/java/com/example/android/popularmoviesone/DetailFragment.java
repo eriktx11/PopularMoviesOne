@@ -74,7 +74,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by erikllerena on 4/29/16.
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     static final String DETAIL_URI = "URI";
@@ -133,16 +133,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final int FORECAST_LOADER = 1;
 
     public static final int SYNC_INTERVAL = 60 * 180;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private SharedPreferences sPrefs;
     SharedPreferences.Editor editor;
-    String fromList="";
+    String fromList = "";
 
-    private SharedPreferences sPrefsF;
-    SharedPreferences.Editor editorF;
+    //private SharedPreferences sPrefsF;
+    //SharedPreferences.Editor editorF;
 
-
+    private AppPreferences _appPrefs;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -158,7 +158,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         editor.apply();
 
 
-
         Bundle arguments = getArguments();
 
         if (arguments != null) {
@@ -166,12 +165,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
             extractedMovieId = mUri.getPathSegments().get(2);
 
+            //sPrefsF = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            //editorF = sPrefsF.edit();
 
-            sPrefsF = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            editorF = sPrefsF.edit();
-            editorF.putString(extractedMovieId, "0");
+
+            _appPrefs = new AppPreferences(getContext());
+
+            _appPrefs.saveSmsBody(extractedMovieId + "new", "0");
+
+            //editorF.putString(extractedMovieId + "new", "0");
             //editorF.putString("favOnOff", "0");
-            editorF.apply();
+            //editorF.apply();
 
 
             String movieUrl = "http://api.themoviedb.org/3/";
@@ -192,12 +196,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     ModelTrailerList trailerList = response.body();
                     Log.d("TrailerList", "onResponse: " + statusCode);
 
-                    List <TrailerList> list = trailerList.getResults();
-                    String key="";
-                    String content="TBD";
-                    String author="me";
+                    List<TrailerList> list = trailerList.getResults();
+                    String key = "";
+                    String content = "TBD";
+                    String author = "me";
 
-                    int count=0;
+                    int count = 0;
                     for (TrailerList element : list) {
 
                         key = element.getKey();
@@ -219,10 +223,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     getContext().getContentResolver().bulkInsert(MovieContract.TheMovieExtras.CONTENT_URI, cvArray);
 
                 }
+
                 @Override
                 public void onFailure(Call<ModelTrailerList> call, Throwable t) {
 
-                    Log.d("TrailerList", "onResponse: "+t.getMessage());
+                    Log.d("TrailerList", "onResponse: " + t.getMessage());
                 }
 
             });
@@ -240,10 +245,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
 
-
-//        Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
-//        Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
-//        setFav.setImageBitmap(bMapScaled);
 
         Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
         Bitmap bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
@@ -293,7 +294,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
 
         // If the password doesn't exist, the account doesn't exist
-        if ( null == accountManager.getPassword(newAccount) ) {
+        if (null == accountManager.getPassword(newAccount)) {
 
             if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
                 return null;
@@ -327,15 +328,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
 
-
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
 
-
-        if ( null != mUri ) {
+        if (null != mUri) {
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
             return new CursorLoader(
@@ -357,6 +354,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
 
@@ -369,7 +367,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             Picasso.with(getContext()).load(poster).into(imageView);
 
-            String sel = sPrefsF.getString(extractedMovieId+"fav", "");
+            String sel = _appPrefs.getSmsBody(extractedMovieId);
 
                 if (sel.equals("1")) {
 
@@ -385,38 +383,40 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 }
 
 
-
             setFav.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick (View v)  {
+                public void onClick(View v) {
 
-                    String favStatus = sPrefsF.getString(extractedMovieId+"fav", "");
+                    String favStatus = _appPrefs.getSmsBody(extractedMovieId);
+                    //sPrefsF.getString(extractedMovieId, "");
 
-                        if (favStatus.equals("1")) {
-                            //ContentValues whichCol = new ContentValues();
-                            //whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
+                    if (favStatus.equals("1")) {
+                        //ContentValues whichCol = new ContentValues();
+                        //whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
 //                            String[] arg = {extractedMovieId};
 //                            String sel = MovieContract.TheMovieList.C_MOVIE_ID + "=?";
 //                            getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
-                            Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
-                            Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
-                            setFav.setImageBitmap(bMapScaled);
-                            editorF.putString(extractedMovieId+"fav", "0");
-                            editorF.apply();
-                        }
-                        else {
-                            Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_on);
-                            Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
-                            setFav.setImageBitmap(bMapScaled);
-                            editorF.putString(extractedMovieId+"fav", "1");
-                            editorF.apply();
+                        Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
+                        Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
+                        setFav.setImageBitmap(bMapScaled);
+                        _appPrefs.removePref(extractedMovieId);
+                        //editorF.remove(extractedMovieId);
+                        //editorF.apply();
+                    } else {
+                        Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_on);
+                        Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
+                        setFav.setImageBitmap(bMapScaled);
+                        _appPrefs.saveSmsBody(extractedMovieId, "1");
+                        //editorF.putString(extractedMovieId, "1");
+                        //editorF.apply();
 
-                        }
+                    }
                 }
             });
 
-
+            //editorF.remove(extractedMovieId + "new");
+            _appPrefs.removePref(extractedMovieId+"new");
 
             fromList = data.getString(COL_TRAILER_KEY);
 
@@ -439,8 +439,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             });
 
 
-
-
             // Read description from cursor and update view
             String overview = data.getString(COL_OVERVIEW);
             OverviewTextView.setText(overview);
@@ -453,7 +451,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String rate = data.getString(COL_RATING);
             textRate.setText(rate);
-
         }
     }
 

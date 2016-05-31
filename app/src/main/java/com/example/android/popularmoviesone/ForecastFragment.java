@@ -6,6 +6,7 @@ package com.example.android.popularmoviesone;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.database.CharArrayBuffer;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,12 +34,15 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.example.android.popularmoviesone.data.DataBaseHelper;
 import com.example.android.popularmoviesone.data.MovieContract;
 import com.example.android.popularmoviesone.data.MovieProvider;
 import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -88,6 +93,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private SharedPreferences sPrefs;
     SharedPreferences.Editor editor;
 
+//    private SharedPreferences sPrefsMenuF;
+//    SharedPreferences.Editor editorMenuF;
+
+    private AppPreferences _appPrefs;
+
 
     public interface Callback {
 
@@ -98,7 +108,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
-    private ArrayList<GridItem> mGridData;
+    //private ArrayList<GridItem> mGridData;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,13 +120,18 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         editor = sPrefs.edit();
         editor.putInt("select", SELECT);
         editor.apply();
+
+//        Context context = getActivity();
+//        sPrefsMenuF = context.getSharedPreferences("sPrefsF", Context.MODE_PRIVATE);
+        _appPrefs = new AppPreferences(getContext());
+
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
     }
-
 
 
     @Override
@@ -124,24 +141,58 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         int id = item.getItemId();
         if (id == R.id.sortP) {
             SELECT = 1;
+            editor.putInt("select", SELECT);
+            editor.apply();
+            getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+            MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
 
         }
 
         if (id == R.id.sortR) {
             SELECT = 2;
+            editor.putInt("select", SELECT);
+            editor.apply();
+            getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+            MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
         }
 
-        editor.putInt("select", SELECT);
-        editor.apply();
 
-        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
-        MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
+        if (id == R.id.favs) {
+            SELECT = 3;
+
+
+            Map<String, ?> allPrefs = _appPrefs.getAll(); //your sharedPreference
+            Set<String> set = allPrefs.keySet();
+            for (String extractedMovieId : set) {
+
+                ContentValues whichCol = new ContentValues();
+                whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
+                String[] arg = {extractedMovieId};
+                String sel = MovieContract.TheMovieList.C_MOVIE_ID + "=?";
+                getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
+            }
+
+            Uri weatherForLocationUri = MovieContract.TheMovieList.buildForPopular();
+            String[] arg = {"1"};
+            String sel = MovieContract.TheMovieList.C_FAV + "=?";
+
+            Cursor data = getActivity().getContentResolver().query(weatherForLocationUri,
+                    FORECAST_COLUMNS,
+                    sel,
+                    arg,
+                    null);
+
+            mForecastAdapter.swapCursor(data);
+        }
+
+
+
+
         return super.onOptionsItemSelected(item);
     }
 
     private Uri uriOutgoing;
     //private MovieAdapter mGridAdapter;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,6 +204,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter = new MovieAdapter(getActivity(), null, SELECT);
         mGridView = (GridView) rootView.findViewById(R.id.movieGrid);
         mGridView.setAdapter(mForecastAdapter);
+
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -212,13 +264,17 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
         }
 
-        return new CursorLoader(getActivity(),
-                weatherForLocationUri,
-                FORECAST_COLUMNS,
-                SELECTION,
-                args,
-                null
-        );
+
+        if (select==1 || select==2) {
+            return new CursorLoader(getActivity(),
+                    weatherForLocationUri,
+                    FORECAST_COLUMNS,
+                    SELECTION,
+                    args,
+                    null
+            );
+        }
+        else return null;
     }
 
 
@@ -226,7 +282,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mForecastAdapter.swapCursor(data);
+
+        if(SELECT==1 || SELECT==2)
+        {mForecastAdapter.swapCursor(data);}
         if (mPosition != GridView.INVALID_POSITION) {
             mGridView.smoothScrollToPosition(mPosition);
         }
