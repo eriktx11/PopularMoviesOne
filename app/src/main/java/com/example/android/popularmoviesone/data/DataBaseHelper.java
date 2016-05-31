@@ -14,7 +14,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     public static String DB_NAME = "mtheater.db";
 
-    public static final int DB_VERSION = 5;
+    public static final int DB_VERSION = 7;
 
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -33,7 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 TheMovieList.C_TITLE + " TEXT NOT NULL, " +
                 TheMovieList.C_POPULAR + " TEXT NOT NULL, " +
                 TheMovieList.C_TOP_RATED + " TEXT NOT NULL, " +
-                TheMovieList.C_FAV + " TEXT NOT NULL, " +
+                TheMovieList.C_FAV + " TEXT, " +
                 TheMovieList.C_POSTER_PATH + " TEXT NOT NULL, " +
 
                 " UNIQUE (" + TheMovieList.C_MOVIE_ID + ") ON CONFLICT REPLACE, " +

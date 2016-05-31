@@ -3,6 +3,7 @@ package com.example.android.popularmoviesone.sync;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
+import android.content.ContentProvider;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.example.android.popularmoviesone.BuildConfig;
 import com.example.android.popularmoviesone.Utility;
 import com.example.android.popularmoviesone.R;
 import com.example.android.popularmoviesone.data.MovieContract;
+import com.example.android.popularmoviesone.data.MovieProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +36,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -48,6 +52,8 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public MovieSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+
+
     }
 
     @Override
@@ -60,6 +66,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
+
 
         // Will contain the raw JSON response as a string.
         String movieJsonStr = null;
@@ -110,7 +117,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 return;
             }
             movieJsonStr = buffer.toString();
-            getMovieDataFromJson(movieJsonStr, select);
+            getMovieDataFromJson(movieJsonStr, select, provider);
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -130,12 +137,12 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
             }
         }
-        return;
+        //return;
     }
 
 
 
-    private void getMovieDataFromJson(String forecastJsonStr, int select)
+    private void getMovieDataFromJson(String forecastJsonStr, int select, ContentProviderClient provider)
             throws JSONException {
 
                 final String PAGES = "results";
@@ -178,9 +185,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 rate = ScanEachMovie.getString(RATE);
                 date = ScanEachMovie.getString(DATE);
                 id = ScanEachMovie.getString(MOVIE_ID);
-//                key = ScanEachMovie.getString(KEY);
-//                content = ScanEachMovie.getString(CONTENT);
-//                author = ScanEachMovie.getString(AUTHOR);
 
                 ContentValues movieParts = new ContentValues();
 
@@ -195,7 +199,15 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieParts.put(MovieContract.TheMovieList.C_POSTER_PATH, poster);
 
 
-                movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
+
+//                String[] qId = {id};
+//                String[] pFav = {MovieContract.TheMovieList.C_FAV};
+//                Cursor cursor = context.getContentResolver()
+//                        .query(MovieContract.TheMovieList.CONTENT_URI, pFav, MovieContract.TheMovieList.C_MOVIE_ID, qId, null);
+//
+
+
+                //movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
 
                 if (select==1){
                     movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");

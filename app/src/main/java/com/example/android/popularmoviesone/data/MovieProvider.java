@@ -239,11 +239,11 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
             case MY_MOVIES:
-                rowsUpdated = db.update(MovieContract.TheMovieList.TABLE_NAME, null, selection,
+                rowsUpdated = db.update(MovieContract.TheMovieList.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             case TRAILERS_REVIEWS:
-                rowsUpdated = db.update(MovieContract.TheMovieExtras.TABLE_NAME, null, selection,
+                rowsUpdated = db.update(MovieContract.TheMovieExtras.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             default:
@@ -276,10 +276,6 @@ public class MovieProvider extends ContentProvider {
                     db.endTransaction();
                 }
 
-//                "review_author";
-//                public static final String C_CONTENT = "review_content";
-//
-//                public static final String C_TRAILER_KEY = "trailer_video";
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             case MOVIE_TRAILERS:
