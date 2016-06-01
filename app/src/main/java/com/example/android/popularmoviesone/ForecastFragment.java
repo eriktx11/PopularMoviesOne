@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,12 +51,16 @@ import java.util.Set;
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private MovieAdapter mForecastAdapter;
 
+    private final String LOG_TAG = ForecastFragment.class.getSimpleName();
+
     private GridView mGridView;
     private int mPosition = GridView.INVALID_POSITION;
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
-    private int SELECT = 1;
+    //private static final String BROWSE_OUT = "savedView";
+
+    private int SELECT=1;
 
     private static final int FORECAST_LOADER = 0;
 
@@ -71,10 +76,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             MovieContract.TheMovieList.C_TOP_RATED,
             MovieContract.TheMovieList.C_FAV,
             MovieContract.TheMovieList.C_POSTER_PATH,
-//            MovieContract.TheMovieExtras.TABLE_NAME + "." + MovieContract.TheMovieExtras._ID,
-//            MovieContract.TheMovieExtras.C_CONTENT,
-//            MovieContract.TheMovieExtras.C_AUTHOR,
-//            MovieContract.TheMovieExtras.C_TRAILER_KEY
     };
 
 
@@ -88,7 +89,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_TOP_RATED = 7;
     static final int COL_FAV = 8;
     static final int COL_POSTER_PATH = 9;
-
 
     private SharedPreferences sPrefs;
     SharedPreferences.Editor editor;
@@ -121,8 +121,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         editor.putInt("select", SELECT);
         editor.apply();
 
-//        Context context = getActivity();
-//        sPrefsMenuF = context.getSharedPreferences("sPrefsF", Context.MODE_PRIVATE);
         _appPrefs = new AppPreferences(getContext());
 
 
@@ -134,6 +132,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
+//menu select
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -159,7 +158,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (id == R.id.favs) {
             SELECT = 3;
-
+            editor.putInt("select", SELECT);
+            editor.apply();
 
             Map<String, ?> allPrefs = _appPrefs.getAll(); //your sharedPreference
             Set<String> set = allPrefs.keySet();
@@ -172,11 +172,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
             }
 
-            Uri weatherForLocationUri = MovieContract.TheMovieList.buildForPopular();
+            Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
             String[] arg = {"1"};
             String sel = MovieContract.TheMovieList.C_FAV + "=?";
 
-            Cursor data = getActivity().getContentResolver().query(weatherForLocationUri,
+            Cursor data = getActivity().getContentResolver().query(moviesUri,
                     FORECAST_COLUMNS,
                     sel,
                     arg,
@@ -184,9 +184,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
             mForecastAdapter.swapCursor(data);
         }
-
-
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -209,7 +206,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
                     Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                     if (cursor != null) {
                         ((Callback) getActivity())
@@ -219,10 +215,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     mPosition = position;
                 }
         });
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-
-            mPosition = savedInstanceState.getInt(SELECTED_KEY);
-        }
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)){
+                        mPosition = savedInstanceState.getInt(SELECTED_KEY);
+            }
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
     }
@@ -235,10 +230,65 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public void onResume() {
+
+        int returning;
+
+        returning = sPrefs.getInt("select", SELECT);
+
+        String routing;
+
+        switch (returning){
+
+            case 1:
+                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
+                break;
+            case 2:
+                routing = MovieContract.TheMovieList.C_TOP_RATED+"=?";
+                break;
+            case 3: {
+                routing = MovieContract.TheMovieList.C_FAV + "=?";
+
+                Map<String, ?> allPrefs = _appPrefs.getAll();
+                Set<String> set = allPrefs.keySet();
+                for (String extractedMovieId : set) {
+
+                    ContentValues whichCol = new ContentValues();
+                    whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
+                    String[] arg = {extractedMovieId};
+                    String sel = MovieContract.TheMovieList.C_MOVIE_ID + "=?";
+                    getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
+                }
+            }
+                break;
+            default:
+                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
+        }
+
+
+        Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
+        String[] arg = {"1"};
+
+        Cursor data = getActivity().getContentResolver().query(moviesUri,
+                FORECAST_COLUMNS,
+                routing,
+                arg,
+                null);
+
+        mForecastAdapter.swapCursor(data);
+
+
+        super.onResume();
+    }
+
+
+
+
+
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
-        // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
-        // so check for that before storing.
+
         if (mPosition != GridView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
@@ -248,7 +298,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
-        Uri weatherForLocationUri = MovieContract.TheMovieList.buildForPopular();
+        Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
 
         String SELECTION = "popular=?";
 
@@ -267,7 +317,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (select==1 || select==2) {
             return new CursorLoader(getActivity(),
-                    weatherForLocationUri,
+                    moviesUri,
                     FORECAST_COLUMNS,
                     SELECTION,
                     args,
@@ -276,8 +326,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
         else return null;
     }
-
-
 
 
     @Override

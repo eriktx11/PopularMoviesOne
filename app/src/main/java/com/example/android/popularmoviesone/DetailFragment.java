@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
@@ -148,6 +149,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         setHasOptionsMenu(true);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = NavUtils.getParentActivityIntent(this.getActivity());
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                NavUtils.navigateUpTo(this.getActivity(), intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -171,7 +188,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             _appPrefs = new AppPreferences(getContext());
 
-            _appPrefs.saveSmsBody(extractedMovieId + "new", "0");
+            //_appPrefs.saveSmsBody(extractedMovieId + "new", "0");
 
             //editorF.putString(extractedMovieId + "new", "0");
             //editorF.putString("favOnOff", "0");
@@ -380,6 +397,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
                     Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
                     setFav.setImageBitmap(bMapScaled);
+                    //_appPrefs.removePref(extractedMovieId);
                 }
 
 
@@ -416,7 +434,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             });
 
             //editorF.remove(extractedMovieId + "new");
-            _appPrefs.removePref(extractedMovieId+"new");
+
 
             fromList = data.getString(COL_TRAILER_KEY);
 

@@ -14,7 +14,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     public static String DB_NAME = "mtheater.db";
 
-    public static final int DB_VERSION = 7;
+    public static final int DB_VERSION = 8;
 
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -49,7 +49,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 TheMovieExtras._ID + " TEXT NOT NULL," +
                 TheMovieExtras.C_AUTHOR + " TEXT NOT NULL, " +
                 TheMovieExtras.C_CONTENT + " TEXT NOT NULL, " +
-                TheMovieExtras.C_TRAILER_KEY + " TEXT NOT NULL " +
+                TheMovieExtras.C_TRAILER_KEY + " TEXT NOT NULL, " +
+
+                " UNIQUE (" + TheMovieList._ID + ") ON CONFLICT REPLACE " +
+
                 " );";
 
         db.execSQL(SQL_CREATE_MOVIE_EXTRAS_TABLE);
