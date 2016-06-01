@@ -249,11 +249,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             case 3: {
                 routing = MovieContract.TheMovieList.C_FAV + "=?";
 
+                ContentValues whichCol = new ContentValues();
+                whichCol.put(MovieContract.TheMovieList.C_FAV, "0");
+                getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, null, null);
+
+
                 Map<String, ?> allPrefs = _appPrefs.getAll();
                 Set<String> set = allPrefs.keySet();
                 for (String extractedMovieId : set) {
 
-                    ContentValues whichCol = new ContentValues();
                     whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
                     String[] arg = {extractedMovieId};
                     String sel = MovieContract.TheMovieList.C_MOVIE_ID + "=?";
@@ -275,7 +279,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 arg,
                 null);
 
-        mForecastAdapter.swapCursor(data);
+
+
+        mForecastAdapter.newView(getContext(), data, mGridView);
+        //mForecastAdapter.swapCursor(data);
 
 
         super.onResume();
