@@ -25,7 +25,6 @@ import java.util.ArrayList;
  * Created by erikllerena on 5/6/16.
  */
 public class MovieAdapter extends CursorAdapter{
-        //ArrayAdapter<GridItem> {
 
     private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_TODAY = 0;
@@ -40,12 +39,10 @@ public class MovieAdapter extends CursorAdapter{
 
 
     private int layoutResourceId;
-    private ArrayList<GridItem> mGridData = new ArrayList<GridItem>();
+    //private ArrayList<GridItem> mGridData = new ArrayList<GridItem>();
 
 
     public MovieAdapter (Context contex, Cursor c, int flags){
-
-
         super(contex, c, flags);
     }
 

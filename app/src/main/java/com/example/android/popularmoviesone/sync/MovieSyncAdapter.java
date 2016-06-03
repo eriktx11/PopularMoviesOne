@@ -199,16 +199,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieParts.put(MovieContract.TheMovieList.C_POSTER_PATH, poster);
 
 
-
-//                String[] qId = {id};
-//                String[] pFav = {MovieContract.TheMovieList.C_FAV};
-//                Cursor cursor = context.getContentResolver()
-//                        .query(MovieContract.TheMovieList.CONTENT_URI, pFav, MovieContract.TheMovieList.C_MOVIE_ID, qId, null);
-//
-
-
-                //movieParts.put(MovieContract.TheMovieList.C_FAV, "0");
-
                 if (select==1){
                     movieParts.put(MovieContract.TheMovieList.C_POPULAR, "1");
                 }else {

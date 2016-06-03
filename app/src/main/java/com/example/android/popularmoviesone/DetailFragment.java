@@ -25,6 +25,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,8 +43,11 @@ import android.widget.VideoView;
 
 import com.example.android.popularmoviesone.data.MovieContract;
 import com.example.android.popularmoviesone.interfaces.PosterExtrasAPI;
+import com.example.android.popularmoviesone.models.ModelReviewList;
 import com.example.android.popularmoviesone.models.ModelTrailerList;
+import com.example.android.popularmoviesone.models.ReviewList;
 import com.example.android.popularmoviesone.models.TrailerList;
+import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -62,6 +66,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.xml.transform.Result;
@@ -129,6 +134,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private ImageButton playTrailer;
     private ImageButton setFav;
+
+    private TextView textAuthor;
+    private TextView textReview;
+
     private PosterExtrasAPI posterExtraAPI;
 
     private static final int FORECAST_LOADER = 1;
@@ -140,8 +149,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     SharedPreferences.Editor editor;
     String fromList = "";
 
-    //private SharedPreferences sPrefsF;
-    //SharedPreferences.Editor editorF;
+    private View rootView;
+
 
     private AppPreferences _appPrefs;
 
@@ -182,18 +191,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
             extractedMovieId = mUri.getPathSegments().get(2);
 
-            //sPrefsF = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            //editorF = sPrefsF.edit();
-
-
             _appPrefs = new AppPreferences(getContext());
-
-            //_appPrefs.saveSmsBody(extractedMovieId + "new", "0");
-
-            //editorF.putString(extractedMovieId + "new", "0");
-            //editorF.putString("favOnOff", "0");
-            //editorF.apply();
-
 
             String movieUrl = "http://api.themoviedb.org/3/";
             Gson gson = new GsonBuilder().create();
@@ -215,15 +213,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                     List<TrailerList> list = trailerList.getResults();
                     String key = "";
-                    String content = "TBD";
-                    String author = "me";
 
                     int count = 0;
                     for (TrailerList element : list) {
-
                         key = element.getKey();
                         count++;
-
                     }
 
                     ContentValues movieParts = new ContentValues();
@@ -231,8 +225,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
                     movieParts.put(MovieContract.TheMovieExtras._ID, extractedMovieId);
                     movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, key);
-                    movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, author);
-                    movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, content);
+                    movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, key);
+                    movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, key);
 
                     cVVector.add(movieParts);
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
@@ -249,9 +243,65 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             });
 
+
+
+            //reviews with author
+
+            Call<ModelReviewList> MReviewListCall = posterExtraAPI.getReviewList(extractedMovieId, BuildConfig.OPEN_MOVIE_API_KEY);
+
+            MReviewListCall.enqueue(new Callback<ModelReviewList>() {
+                @Override
+                public void onResponse(Call<ModelReviewList> call, Response<ModelReviewList> response) {
+                    int statusCode = response.code();
+                    ModelReviewList reviewList = response.body();
+                    Log.d("TrailerList", "onResponse: " + statusCode);
+
+                    List<ReviewList> review = reviewList.getRevResults();
+
+                    String content = "";
+                    String author = "";
+
+                    if(review!=null) {
+                        int count = 0;
+                        for (ReviewList element : review) {
+                            author = element.getAuthor();
+                            content = element.getContent();
+                            count++;
+                        }
+                    }
+
+                    ContentValues whichCol = new ContentValues();
+
+                    whichCol.put(MovieContract.TheMovieExtras.C_CONTENT, content);
+                    String[] arg = {extractedMovieId};
+                    String sel = MovieContract.TheMovieExtras._ID + "=?";
+                    getContext().getContentResolver().update(MovieContract.TheMovieExtras.CONTENT_URI, whichCol, sel, arg);
+
+
+//                    Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
+//                    movieParts.put(MovieContract.TheMovieExtras._ID, extractedMovieId);
+//                    movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, author);
+//                    movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, content);
+//
+//                    cVVector.add(movieParts);
+//                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+//                    cVVector.toArray(cvArray);
+                    //getContext().getContentResolver().bulkInsert(MovieContract.TheMovieExtras.CONTENT_URI, cvArray);
+
+                }
+
+                @Override
+                public void onFailure(Call<ModelReviewList> call, Throwable t) {
+
+                    Log.d("TrailerList", "onResponse: " + t.getMessage());
+                }
+
+            });
+
         }
 
-        View rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
+
+        rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.movie_id_detail);
         OverviewTextView = (TextView) rootView.findViewById(R.id.movie_text_detail);
         OverviewTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -261,6 +311,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         VideoTrailer = (VideoView) rootView.findViewById(R.id.videoView);
         playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
+        textReview = (TextView) rootView.findViewById(R.id.reviewId);
 
 
         Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
@@ -269,80 +320,79 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 //        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
 //        Context context = getContext();
-//
-//        syncImmediately(context, 1);
+//        PosterSyncAdapter.syncImmediately(getActivity(), extractedMovieId);
 
         return rootView;
     }
 
 
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
-        Account account = getSyncAccount(context);
-        String authority = context.getString(R.string.content_authority);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // we can enable inexact timers in our periodic sync
-            SyncRequest request = new SyncRequest.Builder().
-                    syncPeriodic(syncInterval, flexTime).
-                    setSyncAdapter(account, authority).
-                    setExtras(new Bundle()).build();
-            ContentResolver.requestSync(request);
-        } else {
-            ContentResolver.addPeriodicSync(account,
-                    authority, new Bundle(), syncInterval);
-        }
-    }
-
-    public static void syncImmediately(Context context, int select) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
-    }
-
-
-    public static Account getSyncAccount(Context context) {
-        // Get an instance of the Android account manager
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-
-        // Create the account type and default account
-        Account newAccount = new Account(
-                context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
-
-        // If the password doesn't exist, the account doesn't exist
-        if (null == accountManager.getPassword(newAccount)) {
-
-            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
-                return null;
-            }
-
-            onAccountCreated(newAccount, context);
-        }
-        return newAccount;
-    }
-
-    private static void onAccountCreated(Account newAccount, Context context) {
-        /*
-         * Since we've created an account
-         */
-        DetailFragment.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
-
-        /*
-         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
-         */
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
-
-        /*
-         * Finally, let's do a sync to get things started
-         */
-        syncImmediately(context, 1);
-    }
-
-
-    public static void initializeSyncAdapter(Context context) {
-        getSyncAccount(context);
-    }
+//    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+//        Account account = getSyncAccount(context);
+//        String authority = context.getString(R.string.content_authority);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            // we can enable inexact timers in our periodic sync
+//            SyncRequest request = new SyncRequest.Builder().
+//                    syncPeriodic(syncInterval, flexTime).
+//                    setSyncAdapter(account, authority).
+//                    setExtras(new Bundle()).build();
+//            ContentResolver.requestSync(request);
+//        } else {
+//            ContentResolver.addPeriodicSync(account,
+//                    authority, new Bundle(), syncInterval);
+//        }
+//    }
+//
+//    public static void syncImmediately(Context context) {
+//        Bundle bundle = new Bundle();
+//        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//        ContentResolver.requestSync(getSyncAccount(context),
+//                context.getString(R.string.content_authority), bundle);
+//    }
+//
+//
+//    public static Account getSyncAccount(Context context) {
+//        // Get an instance of the Android account manager
+//        AccountManager accountManager =
+//                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+//
+//        // Create the account type and default account
+//        Account newAccount = new Account(
+//                context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
+//
+//        // If the password doesn't exist, the account doesn't exist
+//        if (null == accountManager.getPassword(newAccount)) {
+//
+//            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
+//                return null;
+//            }
+//
+//            onAccountCreated(newAccount, context);
+//        }
+//        return newAccount;
+//    }
+//
+//    private static void onAccountCreated(Account newAccount, Context context) {
+//        /*
+//         * Since we've created an account
+//         */
+//        DetailFragment.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+//
+//        /*
+//         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
+//         */
+//        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
+//
+//        /*
+//         * Finally, let's do a sync to get things started
+//         */
+//        syncImmediately(context);
+//    }
+//
+//
+//    public static void initializeSyncAdapter(Context context) {
+//        getSyncAccount(context);
+//    }
 
 
     @Override
@@ -373,10 +423,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        if (data != null && data.moveToFirst()) {
-
+        if (data.moveToFirst()) {
 
             String poster = data.getString(COL_POSTER_PATH);
 
@@ -397,7 +446,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_off);
                     Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
                     setFav.setImageBitmap(bMapScaled);
-                    //_appPrefs.removePref(extractedMovieId);
                 }
 
 
@@ -407,7 +455,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 public void onClick(View v) {
 
                     String favStatus = _appPrefs.getSmsBody(extractedMovieId);
-                    //sPrefsF.getString(extractedMovieId, "");
 
                     if (favStatus.equals("1")) {
                         //ContentValues whichCol = new ContentValues();
@@ -419,26 +466,21 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
                         setFav.setImageBitmap(bMapScaled);
                         _appPrefs.removePref(extractedMovieId);
-                        //editorF.remove(extractedMovieId);
-                        //editorF.apply();
                     } else {
                         Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_on);
                         Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
                         setFav.setImageBitmap(bMapScaled);
                         _appPrefs.saveSmsBody(extractedMovieId, "1");
-                        //editorF.putString(extractedMovieId, "1");
-                        //editorF.apply();
 
                     }
                 }
             });
 
-            //editorF.remove(extractedMovieId + "new");
-
 
             fromList = data.getString(COL_TRAILER_KEY);
 
-            fromList = "https://youtu.be/"+fromList;
+            fromList = "https://youtu.be/" + fromList;
+
 
             editor.putString("theLink", fromList);
             editor.apply();
@@ -469,10 +511,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String rate = data.getString(COL_RATING);
             textRate.setText(rate);
+
+            String review = data.getString(COL_CONTENT);
+            textReview.setText(review);
+
+
         }
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) { }
+    public void onLoaderReset(Loader<Cursor> loader) {}
 
 }

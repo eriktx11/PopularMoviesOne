@@ -93,9 +93,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private SharedPreferences sPrefs;
     SharedPreferences.Editor editor;
 
-//    private SharedPreferences sPrefsMenuF;
-//    SharedPreferences.Editor editorMenuF;
-
     private AppPreferences _appPrefs;
 
 
@@ -106,9 +103,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public ForecastFragment() {
     }
-
-
-    //private ArrayList<GridItem> mGridData;
 
 
 
@@ -161,7 +155,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             editor.putInt("select", SELECT);
             editor.apply();
 
-            Map<String, ?> allPrefs = _appPrefs.getAll(); //your sharedPreference
+            Map<String, ?> allPrefs = _appPrefs.getAll();
             Set<String> set = allPrefs.keySet();
             for (String extractedMovieId : set) {
 
@@ -282,14 +276,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
 
         mForecastAdapter.newView(getContext(), data, mGridView);
-        //mForecastAdapter.swapCursor(data);
 
 
         super.onResume();
     }
-
-
-
 
 
 

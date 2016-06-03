@@ -1,7 +1,9 @@
 package com.example.android.popularmoviesone.interfaces;
 
 import com.example.android.popularmoviesone.BuildConfig;
+import com.example.android.popularmoviesone.models.ModelReviewList;
 import com.example.android.popularmoviesone.models.ModelTrailerList;
+import com.example.android.popularmoviesone.models.ReviewList;
 import com.example.android.popularmoviesone.models.TrailerList;
 
 import retrofit2.Call;
@@ -20,8 +22,8 @@ public interface PosterExtrasAPI {
     Call<ModelTrailerList> getTrailerList(@Path("id") String movieId, @Query("api_key") String API_KEY);
     //Call<TrailerList> getTrailerList(@Query("id") String movieId, @Query("api_key") String API_KEY);
 
-//    @GET("movie/?/reviews")
-//    Call <ReviewList> getReviewList(@Query("id") String movieId, @Query("api_key") String API_KEY);
+    @GET("movie/{id}/reviews")
+    Call <ModelReviewList> getReviewList(@Path("id") String movieId, @Query("api_key") String API_KEY);
 
 }
 
