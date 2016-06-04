@@ -10,5 +10,8 @@
 
     <string name="sync_account_type">popularmoviesone.example.com</string>
     <string name="content_authority">com.example.android.popularmoviesone</string>
+    <string name="Overview">Overview</string>
+    <string name="Trailer">Trailer</string>
+    <string name="Review">Review</string>
 
 </resources>

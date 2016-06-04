@@ -304,7 +304,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.movie_id_detail);
         OverviewTextView = (TextView) rootView.findViewById(R.id.movie_text_detail);
-        OverviewTextView.setMovementMethod(new ScrollingMovementMethod());
+        OverviewTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
+                //setMovementMethod(ScrollingMovementMethod.getInstance());
+                //setMovementMethod(new ScrollingMovementMethod());
         textTitle = (TextView) rootView.findViewById(R.id.MovieTitle);
         textRate = (TextView) rootView.findViewById(R.id.MovieRating);
         textDate = (TextView) rootView.findViewById(R.id.MovieReleaseDate);
@@ -312,6 +314,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
         textReview = (TextView) rootView.findViewById(R.id.reviewId);
+        textReview.setMovementMethod(ScrollingMovementMethod.getInstance());
+                //setMovementMethod(ScrollingMovementMethod.getInstance());
+                //setMovementMethod(new ScrollingMovementMethod());
 
 
         Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
