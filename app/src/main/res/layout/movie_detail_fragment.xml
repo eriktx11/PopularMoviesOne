@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:layout_width="fill_parent" android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -9,8 +9,8 @@
         android:visibility="visible">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
             android:id="@+id/MovieTitle"
@@ -19,35 +19,34 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
             android:paddingBottom="20dp"
             android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:weightSum="1"
                 android:layout_weight="2">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:id="@+id/movie_id_detail"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:paddingRight="15dp"
-                    android:paddingBottom="10dp"
-                    android:layout_column="0"
-                    android:layout_span="3"
-                    android:layout_weight="0.83" />
+                    android:contentDescription="@string/imgSpec"
+                    android:paddingLeft="22dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:paddingLeft="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,7 +72,8 @@
                     android:layout_width="30dp"
                     android:layout_height="35dp"
                     android:id="@+id/favbtn"
-                    android:src="@drawable/fav_off" />
+                    android:src="@drawable/fav_off"
+                    android:background="#00000000" />
 
             </LinearLayout>
 
@@ -83,7 +83,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/Overview"
             android:id="@+id/textView"
@@ -94,20 +94,18 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="fill_parent"
             android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minHeight="?android:attr/listPreferredItemHeight"
                 android:id="@+id/movie_text_detail"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:scrollbars="vertical"
-                android:layout_column="0"
-                android:layout_span="14"
                 android:layout_gravity="center_vertical|top"
                 android:editable="false"
                 android:layout_marginBottom="15dp" />
@@ -115,9 +113,16 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView2"
+                android:layout_weight="0.2" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -125,7 +130,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/Trailer"
                 android:id="@+id/TitleTrailerId"
-                android:layout_weight="2" />
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,13 +138,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/Review"
                 android:id="@+id/reviewTitleId"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                android:gravity="left" />
         </LinearLayout>
-
-
-
-
-
 
 
 
@@ -147,38 +148,43 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:layout_marginBottom="15dp">
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="4">
 
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="80dp"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
                 android:id="@+id/playbtn"
                 android:src="@drawable/play"
                 android:paddingLeft="8dp"
-                android:layout_weight="0.5"
-                android:paddingRight="10dp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="New Text"
-                android:scrollbars="vertical"
-                android:id="@+id/reviewId"
-                android:height="200dp"
-                android:paddingLeft="10dp"
+                android:layout_weight="2"
                 android:paddingRight="10dp"
-                android:nestedScrollingEnabled="false"
-                android:layout_weight="1" />
+                android:contentDescription="@string/playAttr"
+                android:background="#00000000" />
+
+    <android.support.v4.widget.NestedScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ScrollRevId"
+                android:layout_weight="1"
+        android:scrollIndicators="right"
+        android:nestedScrollingEnabled="true">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="New Text"
+                    android:id="@+id/reviewId"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_weight="0.5"
+                    />
+
+    </android.support.v4.widget.NestedScrollView>
 
         </LinearLayout>
 
-
-
     </LinearLayout>
-
-
-
 
 </ScrollView>

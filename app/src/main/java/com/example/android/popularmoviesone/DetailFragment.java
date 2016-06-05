@@ -12,6 +12,10 @@ import android.database.Cursor;
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +26,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
@@ -31,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +44,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -137,6 +144,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private TextView textAuthor;
     private TextView textReview;
+    private NestedScrollView ScrollRevId;
 
     private PosterExtrasAPI posterExtraAPI;
 
@@ -218,6 +226,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     for (TrailerList element : list) {
                         key = element.getKey();
                         count++;
+
+//                        Drawable dr = getResources().getDrawable(R.drawable.play);
+//                        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+//                        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
                     }
 
                     ContentValues movieParts = new ContentValues();
@@ -242,7 +254,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 }
 
             });
-
 
 
             //reviews with author
@@ -277,17 +288,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     String sel = MovieContract.TheMovieExtras._ID + "=?";
                     getContext().getContentResolver().update(MovieContract.TheMovieExtras.CONTENT_URI, whichCol, sel, arg);
 
-
-//                    Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
-//                    movieParts.put(MovieContract.TheMovieExtras._ID, extractedMovieId);
-//                    movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, author);
-//                    movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, content);
-//
-//                    cVVector.add(movieParts);
-//                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
-//                    cVVector.toArray(cvArray);
-                    //getContext().getContentResolver().bulkInsert(MovieContract.TheMovieExtras.CONTENT_URI, cvArray);
-
                 }
 
                 @Override
@@ -314,7 +314,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
         textReview = (TextView) rootView.findViewById(R.id.reviewId);
-        textReview.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+        //textReview.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+
+//        ScrollRevId = (NestedScrollView) rootView.findViewById(R.id.ScrollRevId);
+//        textReview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                v.getParent().requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            }
+//        });
+
                 //setMovementMethod(ScrollingMovementMethod.getInstance());
                 //setMovementMethod(new ScrollingMovementMethod());
 
@@ -329,75 +341,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         return rootView;
     }
-
-
-//    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
-//        Account account = getSyncAccount(context);
-//        String authority = context.getString(R.string.content_authority);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            // we can enable inexact timers in our periodic sync
-//            SyncRequest request = new SyncRequest.Builder().
-//                    syncPeriodic(syncInterval, flexTime).
-//                    setSyncAdapter(account, authority).
-//                    setExtras(new Bundle()).build();
-//            ContentResolver.requestSync(request);
-//        } else {
-//            ContentResolver.addPeriodicSync(account,
-//                    authority, new Bundle(), syncInterval);
-//        }
-//    }
-//
-//    public static void syncImmediately(Context context) {
-//        Bundle bundle = new Bundle();
-//        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-//        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-//        ContentResolver.requestSync(getSyncAccount(context),
-//                context.getString(R.string.content_authority), bundle);
-//    }
-//
-//
-//    public static Account getSyncAccount(Context context) {
-//        // Get an instance of the Android account manager
-//        AccountManager accountManager =
-//                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-//
-//        // Create the account type and default account
-//        Account newAccount = new Account(
-//                context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
-//
-//        // If the password doesn't exist, the account doesn't exist
-//        if (null == accountManager.getPassword(newAccount)) {
-//
-//            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
-//                return null;
-//            }
-//
-//            onAccountCreated(newAccount, context);
-//        }
-//        return newAccount;
-//    }
-//
-//    private static void onAccountCreated(Account newAccount, Context context) {
-//        /*
-//         * Since we've created an account
-//         */
-//        DetailFragment.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
-//
-//        /*
-//         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
-//         */
-//        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
-//
-//        /*
-//         * Finally, let's do a sync to get things started
-//         */
-//        syncImmediately(context);
-//    }
-//
-//
-//    public static void initializeSyncAdapter(Context context) {
-//        getSyncAccount(context);
-//    }
 
 
     @Override
@@ -436,7 +379,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             poster = "http://image.tmdb.org/t/p/w185/"+poster;
 
-            Picasso.with(getContext()).load(poster).into(imageView);
+            Picasso.with(getContext()).load(poster).resize(205, 305).into(imageView);
 
             String sel = _appPrefs.getSmsBody(extractedMovieId);
 
