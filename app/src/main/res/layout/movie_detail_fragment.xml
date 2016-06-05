@@ -150,7 +150,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginBottom="15dp"
-            android:layout_weight="4">
+            android:layout_weight="2">
 
             <ImageButton
                 android:layout_width="fill_parent"
@@ -163,17 +163,17 @@
                 android:contentDescription="@string/playAttr"
                 android:background="#00000000" />
 
-    <android.support.v4.widget.NestedScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ScrollRevId"
-                android:layout_weight="1"
-        android:scrollIndicators="right"
-        android:nestedScrollingEnabled="true">
+    <!--<android.support.v4.widget.NestedScrollView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/ScrollRevId"-->
+                <!--android:layout_weight="1"-->
+        <!--android:scrollIndicators="right"-->
+        <!--android:nestedScrollingEnabled="true">-->
 
                 <TextView
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:text="New Text"
                     android:id="@+id/reviewId"
                     android:paddingLeft="10dp"
@@ -181,7 +181,7 @@
                     android:layout_weight="0.5"
                     />
 
-    </android.support.v4.widget.NestedScrollView>
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
         </LinearLayout>
 
