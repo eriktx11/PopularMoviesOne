@@ -96,10 +96,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private AppPreferences _appPrefs;
 
 
+
     public interface Callback {
 
-        public void onItemSelected(Uri dateUri);
+        public void onItemSelected(Uri movieUri); //was dateUri
     }
+
 
     public ForecastFragment() {
     }

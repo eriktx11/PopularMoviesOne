@@ -2,6 +2,7 @@ package com.example.android.popularmoviesone;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -160,11 +161,44 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private View rootView;
 
 
+    fromDetailDataInterface mCallback;
+
     private AppPreferences _appPrefs;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
+
+
+
+    public void setCallForDetail (fromDetailDataInterface instance)
+    {
+        this.mCallback = instance;
+    }
+
+
+    public interface fromDetailDataInterface {
+        public void onArticleSelected(Uri position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (fromDetailDataInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement fromDetailDataInterface");
+        }
+    }
+
+
+
+
+
 
 
     @Override

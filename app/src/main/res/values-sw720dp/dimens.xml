@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="activity_horizontal_margin">64dp</dimen>
+    <bool name="isTab">true</bool>
+</resources>

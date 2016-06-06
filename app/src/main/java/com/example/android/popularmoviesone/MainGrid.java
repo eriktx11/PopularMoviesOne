@@ -1,9 +1,14 @@
 package com.example.android.popularmoviesone;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -18,15 +23,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import com.example.android.popularmoviesone.data.MovieContract;
 import com.example.android.popularmoviesone.sync.MovieSyncAdapter;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class MainGrid extends ActionBarActivity implements ForecastFragment.Callback {
 
@@ -35,62 +46,89 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
     private boolean mTwoPane;
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    //private GoogleApiClient client;
 
-    public static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
+    DetailFragment.fromDetailDataInterface dataDetailCall;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        boolean res = isTablet(getBaseContext());
+        boolean res = getResources().getBoolean(R.bool.isTab);
         setContentView(R.layout.main_grid);
+
+        //containerB = (ViewGroup) this.findViewById(R.id.fragment_forecast);
+        //containerA = (ViewGroup) this.findViewById(R.id.movie_detail_container);
+
         //getResources().getBoolean(R.bool.isTab)
-        //findViewById(R.id.movie_detail_container) != null &&
-        if (isTablet(getBaseContext()))  {
-            // The detail container view will be present only in the large-screen layouts
-            // (res/layout-sw600dp). If this view is present, then the activity should be
-            // in two-pane mode.
+        //findViewById(R.id.movie_detail_container) != null
+
+        if (!res) {
+
             mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
+
+
+            dataDetailCall = new DetailFragment.fromDetailDataInterface() {
+                @Override
+                public void onArticleSelected(Uri position) {
+
+                }
+            };
+
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
-                        .commit();
+
+                DetailFragment detailFragment = ((DetailFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.detail_fragment));
+                detailFragment.setCallForDetail(this.dataDetailCall);
+
             }
-        } else {
-            mTwoPane = false;
-            getSupportActionBar().setElevation(0f);
-        }
-
-        ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_forecast));
-
-        forecastFragment.setUseTodayLayout(!mTwoPane);
-
-        MovieSyncAdapter.initializeSyncAdapter(this);
     }
+
+    else
+
+    {
+        mTwoPane = false;
+        getSupportActionBar().setElevation(0f);
+    }
+
+    ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+            .findFragmentById(R.id.fragment_forecast));
+
+    forecastFragment.setUseTodayLayout(!mTwoPane);
+
+    MovieSyncAdapter.initializeSyncAdapter(this);
+
+}
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        //String location = Utility.getPreferredLocation( this );
         // update the location in our second pane using the fragment manager
-    }
+
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+
+            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+
+        }
+
 
     @Override
     public void onItemSelected(Uri contentUri) {
+
+
+
         if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
+
             Bundle args = new Bundle();
             args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
 
@@ -106,9 +144,6 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
             startActivity(intent);
         }
     }
+
 }
-
-
-
-
 

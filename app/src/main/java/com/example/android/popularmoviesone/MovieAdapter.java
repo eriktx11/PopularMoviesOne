@@ -42,8 +42,8 @@ public class MovieAdapter extends CursorAdapter{
     //private ArrayList<GridItem> mGridData = new ArrayList<GridItem>();
 
 
-    public MovieAdapter (Context contex, Cursor c, int flags){
-        super(contex, c, flags);
+    public MovieAdapter (Context context, Cursor c, int flags){
+        super(context, c, flags);
     }
 
 
@@ -90,7 +90,8 @@ public class MovieAdapter extends CursorAdapter{
 //                break;
 //            }
 //        }
-                layoutId = R.layout.movie_item;//movie_detail_info
+
+        layoutId = R.layout.movie_item;//movie_detail_info
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view);

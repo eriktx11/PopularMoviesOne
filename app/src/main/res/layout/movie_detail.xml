@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.popularmoviesone.DetailActivity"
-    tools:ignore="MergeRootFrame">
+    tools:ignore="MergeRootFrame"/>
+
+
+
     <!--tools:ignore="MergeRootFrame"   android:id="@+id/movie_detail_container"-->
   <!--  <GridView
         android:id="@+id/movieGrid"
@@ -20,4 +23,3 @@
         android:focusable="true"
         android:clickable="true"/>-->
 
-</FrameLayout>
