@@ -75,7 +75,6 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
             mTwoPane = true;
 
-
             dataDetailCall = new DetailFragment.fromDetailDataInterface() {
                 @Override
                 public void onArticleSelected(Uri position) {
@@ -85,9 +84,9 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
             if (savedInstanceState == null) {
 
-                DetailFragment detailFragment = ((DetailFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.detail_fragment));
-                detailFragment.setCallForDetail(this.dataDetailCall);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detail_fragment, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
 
             }
     }
