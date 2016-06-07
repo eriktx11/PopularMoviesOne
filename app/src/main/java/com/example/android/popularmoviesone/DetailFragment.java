@@ -393,6 +393,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                         Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);
                         setFav.setImageBitmap(bMapScaled);
                         _appPrefs.removePref(extractedMovieId);
+
+                        ForecastFragment fragment = (ForecastFragment) getFragmentManager()
+                                .findFragmentById(R.id.fragment_forecast);
+                        if (fragment != null) {
+                            fragment.onResume();
+                        }
+
+
                     } else {
                         Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.fav_on);
                         Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, 40, 40, true);

@@ -60,7 +60,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private static final String SELECTED_KEY = "selected_position";
     //private static final String BROWSE_OUT = "savedView";
 
-    private String SELECT="1";
+    //private String SELECT="1";
 
     private static final int FORECAST_LOADER = 0;
 
@@ -174,17 +174,20 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
             }
 
-            Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
-            String[] arg = {"1"};
-            String sel = MovieContract.TheMovieList.C_FAV + "=?";
+            getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
 
-            Cursor data = getActivity().getContentResolver().query(moviesUri,
-                    FORECAST_COLUMNS,
-                    sel,
-                    arg,
-                    null);
 
-            mForecastAdapter.swapCursor(data);
+//            Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
+//            String[] arg = {"1"};
+//            String sel = MovieContract.TheMovieList.C_FAV + "=?";
+//
+//            Cursor data = getActivity().getContentResolver().query(moviesUri,
+//                    FORECAST_COLUMNS,
+//                    sel,
+//                    arg,
+//                    null);
+//
+//            mForecastAdapter.swapCursor(data);
         }
 
         return super.onOptionsItemSelected(item);
@@ -201,7 +204,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mForecastAdapter = new MovieAdapter(getActivity(), null, Integer.parseInt(SELECT));
+        mForecastAdapter = new MovieAdapter(getActivity(), null, 1);
         mGridView = (GridView) rootView.findViewById(R.id.movieGrid);
         mGridView.setAdapter(mForecastAdapter);
 
@@ -222,8 +225,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
-
-
         return rootView;
     }
 
@@ -247,15 +248,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         String routing;
 
         switch (returning){
-
-            case 1:
-                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
-                break;
-            case 2:
-                routing = MovieContract.TheMovieList.C_TOP_RATED+"=?";
-                break;
+//
+//            case 1:
+//                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
+//                break;
+//            case 2:
+//                routing = MovieContract.TheMovieList.C_TOP_RATED+"=?";
+//                break;
             case 3: {
-                routing = MovieContract.TheMovieList.C_FAV + "=?";
+                //routing = MovieContract.TheMovieList.C_FAV + "=?";
 
                 ContentValues whichCol = new ContentValues();
                 whichCol.put(MovieContract.TheMovieList.C_FAV, "0");
@@ -272,15 +273,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, sel, arg);
                 }
             }
-                break;
-            default:
-                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
+//                break;
+//            default:
+//                routing = MovieContract.TheMovieList.C_POPULAR+"=?";
         }
-
-
+//
+//
         Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
         String[] arg = {"1"};
-
+        routing = MovieContract.TheMovieList.C_FAV + "=?"; //testing
         Cursor data = getActivity().getContentResolver().query(moviesUri,
                 FORECAST_COLUMNS,
                 routing,
@@ -319,10 +320,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             case 2:
                 SELECTION = "top_rated=?";
                 break;
+            case 3:
+                SELECTION = "fav_movie=?";
+                break;
         }
 
 
-        if (select==1 || select==2) {
+        //if (select==1 || select==2) {
             return new CursorLoader(getActivity(),
                     moviesUri,
                     FORECAST_COLUMNS,
@@ -330,17 +334,31 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     args,
                     null
             );
-        }
-        else return null;
+        //}
+        //else return null;
+
+
+//        Uri moviesUri = MovieContract.TheMovieList.buildForPopular();
+//        String[] arg = {"1"};
+//
+//        Cursor data = getActivity().getContentResolver().query(moviesUri,
+//                FORECAST_COLUMNS,
+//                routing,
+//                arg,
+//                null);
+
+
     }
 
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        int sel = _appPrefs.getIngBody();
-        if(sel!=3)
-        {mForecastAdapter.swapCursor(data);}
+//        int sel = _appPrefs.getIngBody();
+//        if(sel!=3)
+//        {
+            mForecastAdapter.swapCursor(data);
+//        }
         if (mPosition != GridView.INVALID_POSITION) {
             mGridView.smoothScrollToPosition(mPosition);
         }
@@ -348,7 +366,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mForecastAdapter= null;
+            mForecastAdapter = null;
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
