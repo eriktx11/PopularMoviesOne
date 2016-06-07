@@ -158,48 +158,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     SharedPreferences.Editor editor;
     String fromList = "";
 
-    private View rootView;
-
-
-    fromDetailDataInterface mCallback;
+    //private View rootView;
 
     private AppPreferences _appPrefs;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
-
-
-
-    public void setCallForDetail (fromDetailDataInterface instance)
-    {
-        this.mCallback = instance;
-    }
-
-
-    public interface fromDetailDataInterface {
-        public void onArticleSelected(Uri position);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (fromDetailDataInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement fromDetailDataInterface");
-        }
-    }
-
-
-
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -335,7 +300,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
 
 
-        rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.movie_id_detail);
         OverviewTextView = (TextView) rootView.findViewById(R.id.movie_text_detail);
         OverviewTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -349,29 +314,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
         textReview = (TextView) rootView.findViewById(R.id.reviewId);
 
-        //textReview.setMovementMethod(ScrollingMovementMethod.getInstance());
-
-
-//        ScrollRevId = (NestedScrollView) rootView.findViewById(R.id.ScrollRevId);
-//        textReview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                v.getParent().requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
-
-                //setMovementMethod(ScrollingMovementMethod.getInstance());
-                //setMovementMethod(new ScrollingMovementMethod());
-
 
         Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
         Bitmap bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
         playTrailer.setImageBitmap(bMapPlayScaled);
-
-//        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
-//        Context context = getContext();
-//        PosterSyncAdapter.syncImmediately(getActivity(), extractedMovieId);
 
         return rootView;
     }
@@ -382,8 +328,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
 
         if (null != mUri) {
-            // Now create and return a CursorLoader that will take care of
-            // creating a Cursor for the data being displayed.
+
             return new CursorLoader(
                     getActivity(),
                     mUri,

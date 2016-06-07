@@ -60,7 +60,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private static final String SELECTED_KEY = "selected_position";
     //private static final String BROWSE_OUT = "savedView";
 
-    private int SELECT=1;
+    private String SELECT="1";
 
     private static final int FORECAST_LOADER = 0;
 
@@ -96,7 +96,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private AppPreferences _appPrefs;
 
 
-
     public interface Callback {
 
         public void onItemSelected(Uri movieUri); //was dateUri
@@ -107,61 +106,68 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = sPrefs.edit();
-        editor.putInt("select", SELECT);
-        editor.apply();
+
+        //sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //editor = sPrefs.edit();
+        //editor.putString("select", SELECT);
+        //editor.apply();
 
         _appPrefs = new AppPreferences(getContext());
 
-
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
     }
 
-
-//menu select
+    //menu select
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
         int id = item.getItemId();
         if (id == R.id.sortP) {
-            SELECT = 1;
-            editor.putInt("select", SELECT);
-            editor.apply();
+            //SELECT = "1";
+//            editor.putString("select", SELECT);
+//            editor.apply();
+            _appPrefs.saveIntVal(1);
             getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
-            MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
+            MovieSyncAdapter.syncImmediately(getActivity(), 1);
 
         }
 
         if (id == R.id.sortR) {
-            SELECT = 2;
-            editor.putInt("select", SELECT);
-            editor.apply();
+//            SELECT = "2";
+//            editor.putString("select", SELECT);
+//            editor.apply();
+            _appPrefs.saveIntVal(2);
             getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
-            MovieSyncAdapter.syncImmediately(getActivity(), SELECT);
+            MovieSyncAdapter.syncImmediately(getActivity(), 2);
         }
 
 
         if (id == R.id.favs) {
-            SELECT = 3;
-            editor.putInt("select", SELECT);
-            editor.apply();
+//            SELECT = "3";
+//            editor.putString("select", SELECT);
+//            editor.apply();
+
+            _appPrefs.saveIntVal(3);
+
+            ContentValues whichCol = new ContentValues();
+            whichCol.put(MovieContract.TheMovieList.C_FAV, "0");
+            getContext().getContentResolver().update(MovieContract.TheMovieList.CONTENT_URI, whichCol, null, null);
+
 
             Map<String, ?> allPrefs = _appPrefs.getAll();
             Set<String> set = allPrefs.keySet();
             for (String extractedMovieId : set) {
 
-                ContentValues whichCol = new ContentValues();
                 whichCol.put(MovieContract.TheMovieList.C_FAV, "1");
                 String[] arg = {extractedMovieId};
                 String sel = MovieContract.TheMovieList.C_MOVIE_ID + "=?";
@@ -187,6 +193,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private Uri uriOutgoing;
     //private MovieAdapter mGridAdapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -194,7 +201,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mForecastAdapter = new MovieAdapter(getActivity(), null, SELECT);
+        mForecastAdapter = new MovieAdapter(getActivity(), null, Integer.parseInt(SELECT));
         mGridView = (GridView) rootView.findViewById(R.id.movieGrid);
         mGridView.setAdapter(mForecastAdapter);
 
@@ -202,21 +209,25 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                    if (cursor != null) {
-                        ((Callback) getActivity())
-                                .onItemSelected(MovieContract.TheMovieList.buildMovieUri(cursor.getString(COL_MOVIE_ID)));
-                    }
-
-                    mPosition = position;
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    ((Callback) getActivity())
+                            .onItemSelected(MovieContract.TheMovieList.buildMovieUri(cursor.getString(COL_MOVIE_ID)));
                 }
-        });
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)){
-                        mPosition = savedInstanceState.getInt(SELECTED_KEY);
+
+                mPosition = position;
             }
+        });
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+
+
         return rootView;
     }
+
+
 
 
     @Override
@@ -230,7 +241,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         int returning;
 
-        returning = sPrefs.getInt("select", SELECT);
+        returning = _appPrefs.getIngBody();
+                //sPrefs.getString("select","");
 
         String routing;
 
@@ -275,15 +287,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 arg,
                 null);
 
-
-
         mForecastAdapter.newView(getContext(), data, mGridView);
-
-
         super.onResume();
     }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -301,7 +307,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         String SELECTION = "popular=?";
 
-        int select = sPrefs.getInt("select", SELECT);
+        int select = _appPrefs.getIngBody();
+                //sPrefs.getString("select", "");
+        //int select = Integer.parseInt(selectR);
         String[] args = {"1"};
         //if (select != 0) {
         switch (select) {
@@ -330,7 +338,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        if(SELECT==1 || SELECT==2)
+        int sel = _appPrefs.getIngBody();
+        if(sel!=3)
         {mForecastAdapter.swapCursor(data);}
         if (mPosition != GridView.INVALID_POSITION) {
             mGridView.smoothScrollToPosition(mPosition);

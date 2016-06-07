@@ -17,22 +17,11 @@
         tools:layout="@android:layout/simple_gallery_item" />
 
 
-    <fragment
-        android:id="@+id/detail_fragment"
-        android:name="com.example.android.popularmoviesone.DetailFragment"
+
+    <FrameLayout
+        android:id="@+id/movie_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        tools:layout="@android:layout/simple_gallery_item" />
-
-
-
-
-
-    <!--<FrameLayout-->
-        <!--android:id="@+id/movie_detail_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="3" />-->
+        android:layout_weight="3" />
 
 </LinearLayout>

@@ -46,53 +46,25 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
     private boolean mTwoPane;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    //private GoogleApiClient client;
-
-    DetailFragment.fromDetailDataInterface dataDetailCall;
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        boolean res = getResources().getBoolean(R.bool.isTab);
         setContentView(R.layout.main_grid);
 
-        //containerB = (ViewGroup) this.findViewById(R.id.fragment_forecast);
-        //containerA = (ViewGroup) this.findViewById(R.id.movie_detail_container);
-
-        //getResources().getBoolean(R.bool.isTab)
-        //findViewById(R.id.movie_detail_container) != null
-
-        if (!res) {
+        if (findViewById(R.id.movie_detail_container) != null) {
 
             mTwoPane = true;
-
-            dataDetailCall = new DetailFragment.fromDetailDataInterface() {
-                @Override
-                public void onArticleSelected(Uri position) {
-
-                }
-            };
 
             if (savedInstanceState == null) {
 
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.detail_fragment, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
                         .commit();
 
             }
     }
-
     else
-
     {
         mTwoPane = false;
         getSupportActionBar().setElevation(0f);
@@ -102,7 +74,6 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
             .findFragmentById(R.id.fragment_forecast));
 
     forecastFragment.setUseTodayLayout(!mTwoPane);
-
     MovieSyncAdapter.initializeSyncAdapter(this);
 
 }
@@ -111,11 +82,8 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
     @Override
     protected void onResume() {
         super.onResume();
-        //String location = Utility.getPreferredLocation( this );
-        // update the location in our second pane using the fragment manager
 
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
 
         }
@@ -123,8 +91,6 @@ public class MainGrid extends ActionBarActivity implements ForecastFragment.Call
 
     @Override
     public void onItemSelected(Uri contentUri) {
-
-
 
         if (mTwoPane) {
 
