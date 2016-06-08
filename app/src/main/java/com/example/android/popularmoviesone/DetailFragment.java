@@ -137,10 +137,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView textTitle;
     private TextView textRate;
     private TextView textDate;
+    private TextView trailerTitle;
+    private TextView reviewTitle;
     private ImageView imageView;
     private VideoView VideoTrailer;
 
     private ImageButton playTrailer;
+    private ImageButton playTrailerM;
+    private ImageButton playTrailerL;
+
     private ImageButton setFav;
 
     private TextView textAuthor;
@@ -183,7 +188,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
 
         sPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = sPrefs.edit();
@@ -221,21 +227,38 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     List<TrailerList> list = trailerList.getResults();
                     String key = "";
 
+                    String totalKey ="";
+
                     int count = 0;
-                    for (TrailerList element : list) {
-                        key = element.getKey();
-                        count++;
+                    if(list!=null) {
+                        trailerTitle.setText(getResources().getString(R.string.trailerTitle));
+                        for (TrailerList element : list) {
+                            key = element.getKey();
 
-//                        Drawable dr = getResources().getDrawable(R.drawable.play);
-//                        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-//                        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+                            switch (count) {
+                                case 0:
+                                    playTrailer.setVisibility(View.VISIBLE);
+                                    break;
+                                case 1:
+                                    playTrailerM.setVisibility(View.VISIBLE);
+                                    break;
+                                case 2:
+                                    playTrailerL.setVisibility(View.VISIBLE);
+                                    break;
+                            }
+                            if(count<=2){
+                                editor.putInt(key, count);
+                                totalKey=totalKey+key+":-:";
+                            }
+                            count++;
+
+                        }
                     }
-
                     ContentValues movieParts = new ContentValues();
 
                     Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
                     movieParts.put(MovieContract.TheMovieExtras._ID, extractedMovieId);
-                    movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, key);
+                    movieParts.put(MovieContract.TheMovieExtras.C_TRAILER_KEY, totalKey);
                     movieParts.put(MovieContract.TheMovieExtras.C_CONTENT, key);
                     movieParts.put(MovieContract.TheMovieExtras.C_AUTHOR, key);
 
@@ -264,7 +287,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 public void onResponse(Call<ModelReviewList> call, Response<ModelReviewList> response) {
                     int statusCode = response.code();
                     ModelReviewList reviewList = response.body();
-                    Log.d("TrailerList", "onResponse: " + statusCode);
+                    Log.d("ReviewList", "onResponse: " + statusCode);
 
                     List<ReviewList> review = reviewList.getRevResults();
 
@@ -272,13 +295,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     String author = "";
 
                     if(review!=null) {
+                        reviewTitle.setText(getResources().getString(R.string.reviewTitle));
                         int count = 0;
                         for (ReviewList element : review) {
                             author = element.getAuthor();
                             content = element.getContent();
                             count++;
                         }
-                    }
+                    }else {playTrailer.setVisibility(View.GONE);}
 
                     ContentValues whichCol = new ContentValues();
 
@@ -311,13 +335,25 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         textDate = (TextView) rootView.findViewById(R.id.MovieReleaseDate);
         VideoTrailer = (VideoView) rootView.findViewById(R.id.videoView);
         playTrailer = (ImageButton) rootView.findViewById(R.id.playbtn);
+        playTrailerM = (ImageButton) rootView.findViewById(R.id.playbtnmid);
+        playTrailerL = (ImageButton) rootView.findViewById(R.id.playbtnlast);
         setFav = (ImageButton) rootView.findViewById(R.id.favbtn);
         textReview = (TextView) rootView.findViewById(R.id.reviewId);
+        trailerTitle = (TextView) rootView.findViewById(R.id.TitleTrailerId);
+        reviewTitle = (TextView) rootView.findViewById(R.id.reviewTitleId);
 
 
         Bitmap bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
         Bitmap bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
         playTrailer.setImageBitmap(bMapPlayScaled);
+
+        bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
+        bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
+        playTrailerM.setImageBitmap(bMapPlayScaled);
+
+        bMapPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
+        bMapPlayScaled = Bitmap.createScaledBitmap(bMapPlay, 60, 60, true);
+        playTrailerL.setImageBitmap(bMapPlayScaled);
 
         return rootView;
     }
@@ -412,12 +448,35 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             });
 
 
-            fromList = data.getString(COL_TRAILER_KEY);
+            String fromLista;
+            fromLista = data.getString(COL_TRAILER_KEY);
+            sPrefs.edit().clear().apply();
+            String[] separated = fromLista.split(":-:");
 
-            fromList = "https://youtu.be/" + fromList;
+//            Map<String, ?> allPrefs =sPrefs.getAll();
+//            Set<String> seeWhere = allPrefs.keySet();
+//            String[] BOHALA = seeWhere.toArray(new String[seeWhere.size()]);
+            String firstT="";
+            String middleT="";
+            String lastT="";
 
+            for (int i=0; i < separated.length; i++)
+            {
+                switch (i){
+                    case 0:
+                        firstT=separated[i];break;
+                    case 1:
+                        middleT=separated[i];break;
+                    case 2:
+                        lastT=separated[i];break;
+                }
 
-            editor.putString("theLink", fromList);
+            }
+
+            fromLista="";
+            fromLista = "https://youtu.be/" + firstT;
+
+            editor.putString("theLink", fromLista);
             editor.apply();
 
 
@@ -426,12 +485,48 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 @Override
                 public void onClick(View v) {
 
-                    String internalData = sPrefs.getString("theLink", fromList);
+                    String internalData = sPrefs.getString("theLink", "");
                     Intent toYouT = new Intent(Intent.ACTION_VIEW, Uri.parse(internalData));
                     startActivity(toYouT);
 
                 }
             });
+
+            fromList="";
+            fromList = "https://youtu.be/" + middleT;
+            editor.putString("theLinkM", fromList);
+            editor.apply();
+
+            playTrailerM.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    String internalData = sPrefs.getString("theLinkM", "");
+                    Intent toYouT = new Intent(Intent.ACTION_VIEW, Uri.parse(internalData));
+                    startActivity(toYouT);
+
+                }
+            });
+
+
+            fromList="";
+            fromList = "https://youtu.be/" + lastT;
+            editor.putString("theLinkL", fromList);
+            editor.apply();
+
+            playTrailerL.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    String internalData = sPrefs.getString("theLinkL", "");
+                    Intent toYouT = new Intent(Intent.ACTION_VIEW, Uri.parse(internalData));
+                    startActivity(toYouT);
+
+                }
+            });
+
 
 
             // Read description from cursor and update view

@@ -15,5 +15,9 @@
     <string name="Review">Review</string>
     <string name="imgSpec">1</string>
     <string name="playAttr">playAttr</string>
+    <string name="themidle">themiddle</string>
+    <string name="thelast">thelast</string>
+    <string name="trailerTitle">Trailer</string>
+    <string name="reviewTitle">Review</string>
 
 </resources>

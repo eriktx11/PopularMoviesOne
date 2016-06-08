@@ -229,8 +229,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
-
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
