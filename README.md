@@ -1,3 +1,4 @@
+[![API](https://img.shields.io/badge/API-11%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=11)
 # Popular Movies - Android App
 This app creates a grid view of movies that are first pulled off from [themoviedb.org](themoviedb.org).
 Its code detecs if the screen size of the device can be set to one pane, or two panes. This is an ideal solution for tablets.
