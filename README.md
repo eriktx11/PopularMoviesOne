@@ -18,5 +18,5 @@ Make sure you go to [themoviedb.org](themoviedb.org) to get your API key, and pu
 
 ## License
 
-[Apache 2.0](https://svn.apache.org/viewvc/httpd/httpd/trunk/LICENSE?view=markup)./
-Also those commented in the above java files, and 3rd party libraries
+[Apache 2.0](https://svn.apache.org/viewvc/httpd/httpd/trunk/LICENSE?view=markup)  
+Also those added to the gradle configuration file.
