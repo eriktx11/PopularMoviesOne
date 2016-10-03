@@ -1,4 +1,5 @@
-[![API](https://img.shields.io/badge/API-11%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=11)
+
+[![API](https://img.shields.io/badge/API-11%2b-green.svg?style=flat)](https://android-arsenal.com/api?level=11)
 
 # Popular Movies - Android App
 This app creates a grid view of movies that are first pulled off from [themoviedb.org](https://www.themoviedb.org).
