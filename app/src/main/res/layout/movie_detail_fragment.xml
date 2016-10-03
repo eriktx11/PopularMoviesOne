@@ -186,6 +186,9 @@
                     android:contentDescription="@string/thelast" />
             </LinearLayout>
 
+            <!--android padding left and start part of checklist-->
+
+
             <!--<android.support.v4.widget.NestedScrollView-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="wrap_content"-->

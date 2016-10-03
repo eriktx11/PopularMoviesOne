@@ -196,7 +196,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         editor.putString("theLink", fromList);
         editor.apply();
 
-
         Bundle arguments = getArguments();
 
         if (arguments != null) {

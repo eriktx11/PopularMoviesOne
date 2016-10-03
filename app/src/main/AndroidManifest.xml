@@ -3,6 +3,18 @@
     package="com.example.android.popularmoviesone">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission." />
+
+
+
+
+    <!-- need gcm ????????????????????????????????? and wakeloc, receive, msg
+    in java we should hv receiver, listener, instanceID and Registration-->
+
+
+    <!-- Permissions required by friendly UI -->
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Permissions required by the sync adapter -->
     <uses-permission
@@ -21,18 +33,16 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainGrid"
             android:label="Movies">
-
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
-
         </intent-filter>
         </activity>
 
         <activity
             android:name=".DetailActivity"
             android:label="Details"
-            android:parentActivityName=".MainGrid" >
+            android:parentActivityName=".MainGrid">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.popularmoviesone.MainGrid" />
