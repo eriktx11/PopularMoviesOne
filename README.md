@@ -8,7 +8,7 @@ Its code detecs if the screen size of the device can be set to one pane, or two 
 <img src="http://www.dia40.com/oodles/popmov/ss2.png" width="300"><br>
 <img src="http://www.dia40.com/oodles/popmov/ss3.png" width="300">
 <img src="http://www.dia40.com/oodles/popmov/ss4.png" width="300"><br>
-<img src="http://www.dia40.com/oodles/popmov/ss5.png" width="300">
+<img src="http://www.dia40.com/oodles/popmov/ss5.png" width="600">
 
 
 ## API
