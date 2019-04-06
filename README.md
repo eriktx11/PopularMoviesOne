@@ -5,11 +5,11 @@
 This app creates a grid view of movies that are first pulled off from [themoviedb.org](https://www.themoviedb.org).
 Its code detects if the screen size of the device can be set to one pane, or two panes. This is an ideal solution for tablets.
 
-<img src="http://www.dia40.com/oodles/popmov/ss1.png" width="300">
-<img src="http://www.dia40.com/oodles/popmov/ss2.png" width="300"><br>
-<img src="http://www.dia40.com/oodles/popmov/ss3.png" width="300">
-<img src="http://www.dia40.com/oodles/popmov/ss4.png" width="300"><br>
-<img src="http://www.dia40.com/oodles/popmov/ss5.png" width="600">
+<img src="http://www.latinosgottalent.com/oodles/popmov/ss1.png" width="300">
+<img src="http://www.latinosgottalent.com/oodles/popmov/ss2.png" width="300"><br>
+<img src="http://www.latinosgottalent.com/oodles/popmov/ss3.png" width="300">
+<img src="http://www.latinosgottalent.com/oodles/popmov/ss4.png" width="300"><br>
+<img src="http://www.latinosgottalent.com/oodles/popmov/ss5.png" width="600">
 
 
 ## API
