@@ -15,7 +15,7 @@ Its code detects if the screen size of the device can be set to one pane, or two
 ## API
 Make sure you go to [themoviedb.org](https://www.themoviedb.org) to get your API key, and put it in the gradle.properties file, otherwise this app will not run.
 
-##Technologies Used: 
+## Technologies Used: 
 - SharePreferences. 
 - Fragment.
 - Cursor Loaders. 
